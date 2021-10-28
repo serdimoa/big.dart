@@ -60,6 +60,16 @@ extension BigListExtension<T> on Iterable<T> {
   }
 }
 
+extension ListEx<T> on List<T> {
+  void reverse() {
+    for (var i = 0; i < length / 2; i++) {
+      var tempValue = elementAt(i);
+      this[i] = elementAt(length - 1 - i);
+      this[length - 1 - i] = tempValue;
+    }
+  }
+}
+
 var numeric = RegExp(
   r"^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$",
   caseSensitive: false,
@@ -147,7 +157,6 @@ class Big with EquatableMixin {
           );
         }
         // Minus zero?
-        print(n);
         if (n == 0 && 1 / n < 0) {
           n = '-0';
         } else {
@@ -452,7 +461,8 @@ class Big with EquatableMixin {
   /// Return a new Big whose value is the value of this Big minus the value of Big y.
   Big sub(Big y) {
     int i, j;
-    var t, xlty, x = this, a = x.s, b = y.s;
+    List<int> t;
+    var xlty, x = this, a = x.s, b = y.s;
     // Signs differ?
     if (a != b) {
       y.s = -b;
@@ -487,7 +497,7 @@ class Big with EquatableMixin {
       t.reverse();
       for (b = a; b > 0;) {
         b--;
-        t.push(0);
+        t.add(0);
       }
       t.reverse();
     } else {
@@ -517,7 +527,12 @@ class Big with EquatableMixin {
     if ((b = (j = yc.length) - (i = xc.length)) > 0) {
       for (; b > 0;) {
         b--;
-        xc[i++] = 0;
+        i++;
+        if (xc.elementAtOrNull(i) != null) {
+          xc[i] = 0;
+        } else {
+          xc.add(0);
+        }
       }
     }
 
@@ -541,9 +556,8 @@ class Big with EquatableMixin {
         break;
       }
     }
-
     // Remove leading zeros and adjust exponent accordingly.
-    for (; xc[0] == 0;) {
+    for (; xc.isNotEmpty && xc[0] == 0;) {
       xc.removeAt(0);
       --ye;
     }
@@ -602,7 +616,6 @@ class Big with EquatableMixin {
     }
 
     var xe = x.e, xc = x.c, ye = y.e, yc = y.c;
-
     // Either zero?
     if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
       if (!yc.numberAtLikeJsTest(0)) {
@@ -614,7 +627,6 @@ class Big with EquatableMixin {
       }
       return y;
     }
-
     xc = [...xc];
 
     // Prepend zeros to equalise exponents.
@@ -629,11 +641,12 @@ class Big with EquatableMixin {
         t = xc;
       }
 
-      t = t.reversed.toList();
-      for (; (e--) >= 0;) {
+      t.reverse();
+
+      for (; e-- > 0;) {
         t.add(0);
       }
-      t = t.reversed.toList();
+      t.reverse();
     }
 
     // Point xc to the longer array.
