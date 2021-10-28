@@ -142,6 +142,8 @@ class Big with EquatableMixin {
     }
   }
 
+  Big.fromParams(this.s, this.e, this.c);
+
   Big(dynamic n, {BigOption? options}) {
     // Duplicate
     if (n is Big) {
@@ -297,6 +299,7 @@ class Big with EquatableMixin {
   /// Return a new Big whose value is the value of this Big divided by the value of Big y, rounded,
   /// if necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
   Big div(Big y) {
+    y = Big(y);
     var x = this,
         a = x.c, // dividend
         b = y.c, // divisor
@@ -423,7 +426,6 @@ class Big with EquatableMixin {
 
     // Round?
     if (qi > p) {
-      // print(r);
       round(q, p, RoundingMode.values[rm], more: r.firstOrNull != null);
     }
 
@@ -460,6 +462,7 @@ class Big with EquatableMixin {
 
   /// Return a new Big whose value is the value of this Big minus the value of Big y.
   Big sub(Big y) {
+    y = Big(y);
     int i, j;
     List<int> t;
     var xlty, x = this, a = x.s, b = y.s;
@@ -580,7 +583,9 @@ class Big with EquatableMixin {
      * Return a new Big whose value is the value of this Big modulo the value of Big y.
      */
   Big mod(Big y) {
-    var ygtx, x = this, a = x.s, b = (y = Big(y)).s;
+    bool ygtx;
+    y = Big(y);
+    var x = this, a = x.s, b = y.s;
 
     if (!y.c.numberAtLikeJsTest(0)) {
       throw BigError(code: BigErrorCode.divByZero, description: divByZero);
@@ -590,7 +595,6 @@ class Big with EquatableMixin {
     ygtx = y.cmp(x) == 1;
     x.s = a;
     y.s = b;
-
     if (ygtx) return Big(x);
 
     a = dp;
@@ -599,7 +603,6 @@ class Big with EquatableMixin {
     x = x.div(y);
     dp = a;
     rm = b;
-
     return sub(x.times(y));
   }
 
@@ -608,6 +611,7 @@ class Big with EquatableMixin {
     int e, k;
     List<int> t;
     Big x = this;
+    y = Big(y);
 
     // Signs differ?
     if (x.s != y.s) {
@@ -707,9 +711,10 @@ class Big with EquatableMixin {
   /// Return a new Big whose value is the value of this Big times the value of Big y.
   Big times(Big y) {
     List<int> c;
+    y = Big(y);
     var x = this,
         xc = x.c,
-        yc = (y = Big(y)).c,
+        yc = y.c,
         a = xc.length,
         b = yc.length,
         i = x.e,
@@ -738,8 +743,7 @@ class Big with EquatableMixin {
     }
 
     // Initialize coefficient array of result with zeros.
-    c = List.filled(a + b, 0);
-
+    c = List.filled(a + b, 0, growable: true);
     // Multiply.
 
     // i is initially xc.length.
@@ -770,8 +774,8 @@ class Big with EquatableMixin {
     for (i = c.length; !c.numberAtLikeJsTest(--i);) {
       c.removeLast();
     }
-    y.c = c;
 
+    y.c = c;
     return y;
   }
 
