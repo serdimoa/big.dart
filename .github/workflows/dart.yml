@@ -39,3 +39,8 @@ jobs:
         with:
           path: './coverage/lcov.info'
           min_coverage: 90
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
