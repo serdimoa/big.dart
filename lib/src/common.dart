@@ -26,23 +26,3 @@ enum RoundingMode {
   ///Rounds away from zero
   roundUp,
 }
-
-class BigOption {
-  final int dp;
-  final RoundingMode rm;
-  final int ne;
-  final int pe;
-  final bool strict;
-  BigOption({
-    this.dp = 20,
-    this.rm = RoundingMode.roundHalfUp,
-    this.ne = -7,
-    this.pe = 21,
-    this.strict = false,
-  });
-
-  @override
-  String toString() {
-    return 'BigOption(dp: $dp, rm: $rm, ne: $ne, pe: $pe, strict: $strict)';
-  }
-}

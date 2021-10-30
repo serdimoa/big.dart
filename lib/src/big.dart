@@ -86,8 +86,6 @@ class Big with EquatableMixin {
   /// Returns the sign, -1 or 1
   late int s;
 
-  String get debug => "Big {\n s:$s,\ne:$e,\nc:$c\n}";
-
   /// ************************************ EDITABLE DEFAULTS *****************************************/
 
   // The default values below must be integers within the stated ranges.
@@ -142,8 +140,6 @@ class Big with EquatableMixin {
     }
   }
 
-  Big.fromParams(this.s, this.e, this.c);
-
   Big prec(int sd, int? _rm) {
     if (sd != ~~sd || sd < 1 || sd > maxDp) {
       throw BigError(description: invalid + 'precision', code: BigErrorCode.dp);
@@ -155,7 +151,7 @@ class Big with EquatableMixin {
     );
   }
 
-  Big(dynamic n, {BigOption? options}) {
+  Big(dynamic n) {
     // Duplicate
     if (n is Big) {
       s = n.s;
@@ -170,22 +166,16 @@ class Big with EquatableMixin {
           );
         }
         // Minus zero?
-        if (n == 0 && 1 / n < 0) {
-          n = '-0';
-        } else {
-          n = n.toString();
-        }
+        // if (n == 0 && 1 / n < 0) {
+
+        // } else {
+        n = n.toString();
+        // }
       }
       Big b = parse(this, n);
       c = b.c;
       e = b.e;
       s = b.s;
-    }
-    if (options != null) {
-      dp = options.dp;
-      rm = options.rm.index;
-      ne = options.ne;
-      pe = options.pe;
     }
   }
 
@@ -194,6 +184,7 @@ class Big with EquatableMixin {
   ///  n {number|string} A numeric value.
   Big parse(Big x, dynamic n) {
     int e, i, nl;
+    // print(n);
 
     if (!numeric.hasMatch(n)) {
       throw BigError(
@@ -455,27 +446,14 @@ class Big with EquatableMixin {
       // Add the digit n to the result array.
       if (cmp != null && cmp != 0) {
         qi++;
-        if (qc.elementAtOrNull(qi) == null) {
-          qc.add(n);
-        } else {
-          qc[qi] = n;
-        }
+        qc.add(n);
       } else {
         qi++;
-
-        if (qc.elementAtOrNull(qi) == null) {
-          qc.add(++n);
-        } else {
-          qc[qi] = ++n;
-        }
+        qc.add(++n);
       }
       // Update the remainder.
       if (r.numberAtLikeJsTest(0) && cmp != null && cmp != 0) {
-        if (r.elementAtOrNull(rl) == null) {
-          r.add(a.elementAtOrNull(ai) ?? 0);
-        } else {
-          r[rl] = a.elementAtOrNull(ai) ?? 0;
-        }
+        r.add(a.elementAtOrNull(ai) ?? 0);
       } else {
         r = a.elementAtOrNull(ai) != null ? [a.elementAt(ai)] : [];
       }
@@ -596,11 +574,7 @@ class Big with EquatableMixin {
       for (; b > 0;) {
         b--;
         i++;
-        if (xc.elementAtOrNull(i) != null) {
-          xc[i] = 0;
-        } else {
-          xc.add(0);
-        }
+        xc.add(0);
       }
     }
 

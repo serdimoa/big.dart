@@ -6,14 +6,12 @@ import './_utils.dart';
 
 void main() {
   test('abs', () {
+    Big.dp = 20;
+    Big.rm = 1;
     t(expected, value) {
       expect(
           Big(
             value.toString(),
-            options: BigOption(
-              dp: 20,
-              rm: RoundingMode.roundHalfUp,
-            ),
           ).abs().toString(),
           expected.toString());
     }
