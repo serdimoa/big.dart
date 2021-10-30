@@ -281,10 +281,10 @@ class Big with EquatableMixin {
       }
       s = math.sqrt(double.parse(c));
       e = ((e + 1) ~/ 2 | 0) - (e < 0 ? 1 : e.toInt() & 1);
-      var _s = s.toStringAsExponential();
-      var predefined = s == 1 / 0 ? '5e' : _s.substring(0, _s.indexOf('e') + 1);
+      var sAsExp = s.toStringAsExponential();
+      var predefined =
+          s == 1 / 0 ? '5e' : sAsExp.substring(0, sAsExp.indexOf('e') + 1);
       r = Big('$predefined$e');
-      // _s
     } else {
       r = Big(s);
     }

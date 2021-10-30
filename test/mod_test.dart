@@ -1,4 +1,5 @@
-import 'package:big/src/big.dart';
+import 'package:big/big.dart';
+
 import 'package:test/test.dart';
 
 import '_utils.dart';
