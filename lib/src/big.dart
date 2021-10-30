@@ -240,11 +240,7 @@ class Big with EquatableMixin {
 
       // Convert string to array of digits without leading/trailing zeros.
       for (e = 0; i <= nl;) {
-        try {
-          x.c.add(int.parse(n[i++]));
-        } catch (e) {
-          print(e);
-        }
+        x.c.add(int.parse(n[i++]));
       }
     }
     return x;

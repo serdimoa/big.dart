@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('toNumber', () {
-    var t;
+    Function t;
 
     Big.ne = -7;
     Big.pe = 21;
