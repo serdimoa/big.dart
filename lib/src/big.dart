@@ -504,7 +504,8 @@ class Big with EquatableMixin {
     y = Big(y);
     int i, j;
     List<int> t;
-    var xlty, x = this, a = x.s, b = y.s;
+    bool xlty;
+    var x = this, a = x.s, b = y.s;
     // Signs differ?
     if (a != b) {
       y.s = -b;
