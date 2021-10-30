@@ -126,7 +126,7 @@ class Big with EquatableMixin {
   /// ************************************************************************************************/
 
   // Error messages.
-  static const name = '[big.js] ';
+  static const name = '[big.dart] ';
   static const invalid = name + 'Invalid ';
   static const invalidDp = invalid + 'decimal places';
   static const invalidRm = invalid + 'rounding mode';
@@ -923,10 +923,12 @@ class Big with EquatableMixin {
   String valueOf() {
     var x = this;
 
-    /// TODO:
-    // if (Big.strict == true) {
-    //   throw Error(NAME + 'valueOf disallowed');
-    // }
+    if (Big.strict == true) {
+      throw BigError(
+        description: name + 'valueOf disallowed',
+        code: BigErrorCode.type,
+      );
+    }
     return stringify(x, x.e <= ne || x.e >= pe, true);
   }
 
