@@ -10,7 +10,7 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
-<a href="https://github.com/serdimoa/big.dart/actions"><img src="https://github.com/serdimoa/big.dart/workflows/Big.dart/badge.svg" alt="build"></a>
+<a href="https://github.com/serdimoa/big.dart/actions"><img src="https://github.com/serdimoa/big.dart/workflows/big.dart/badge.svg" alt="build"></a>
 [![Coverage Status](https://coveralls.io/repos/github/serdimoa/big.dart/badge.svg)](https://coveralls.io/github/serdimoa/big.dart)
 
 ## Features
