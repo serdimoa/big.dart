@@ -956,6 +956,19 @@ class Big with EquatableMixin {
 
   @override
   List<Object?> get props => [c, e, s];
+
+  Big selfRound([int? dp, int? roundingMode]) {
+    if (dp == null) {
+      dp = 0;
+    } else if (dp != ~~dp || dp < -maxDp || dp > maxDp) {
+      throw BigError(code: BigErrorCode.dp, description: invalidDp);
+    }
+    return round(
+      Big(this),
+      dp + e + 1,
+      RoundingMode.values.elementAtOrNull(roundingMode ?? 99),
+    );
+  }
 }
 
 extension BigDynamic on dynamic {
