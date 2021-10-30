@@ -923,28 +923,33 @@ class Big with EquatableMixin {
   /// sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
   /// rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
 
-  String toPrecision(int sd, RoundingMode? rm) {
+  String toPrecision([int? sd, RoundingMode? rm]) {
     var x = this, n = x.c[0];
-
-    if (sd != ~~sd || sd < 1 || sd > maxDp) {
-      throw BigError(
-        description: invalid + 'precision',
-        code: BigErrorCode.sd,
-      );
+    if (sd != null) {
+      if (sd != ~~sd || sd < 1 || sd > maxDp) {
+        throw BigError(
+          description: invalid + 'precision',
+          code: BigErrorCode.sd,
+        );
+      }
+      x = round(Big(x), sd, rm);
+      for (; x.c.length < sd;) {
+        x.c.add(0);
+      }
     }
-    x = round(Big(x), sd, rm);
-    for (; x.c.length < sd;) {
-      x.c.add(0);
-    }
 
-    return stringify(x, sd <= x.e || x.e <= ne || x.e >= pe, n != 0);
+    return stringify(
+      x,
+      (sd != null && sd <= x.e) || x.e <= ne || x.e >= pe,
+      n != 0,
+    );
   }
 
   /// Return a string representing the value of this Big.
   /// Return exponential notation if this Big has a positive exponent equal to or greater than
   /// Big.PE, or a negative exponent equal to or less than Big.NE.
   /// Include the sign for negative zero.
-  valueOf() {
+  String valueOf() {
     var x = this;
 
     /// TODO:
