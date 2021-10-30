@@ -6,6 +6,7 @@ enum BigErrorCode {
   pow, // if exp is invalid
   dp,
   rm,
+  sqrt,
   sd,
 }
 

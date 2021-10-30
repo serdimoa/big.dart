@@ -6,7 +6,7 @@ import 'package:big/src/round.dart';
 import 'package:big/src/stringify.dart';
 import 'package:big/src/utils.dart';
 import 'package:equatable/equatable.dart';
-import 'dart:math';
+import 'dart:math' as math;
 // import 'package:collection/collection.dart';
 
 extension BigList<T> on List<T> {
@@ -118,7 +118,7 @@ class Big with EquatableMixin {
   /// The positive exponent (PE) at and above which toString returns exponential notation.
   /// (JavaScript numbers: 21)
   /// 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
-  var pe = 21; // 0 to 1000000
+  static var pe = 21; // 0 to 1000000
 
   /// When true, an error will be thrown if a primitive number is passed to the Big constructor,
   /// or if valueOf is called, or if toNumber is called on a Big which cannot be converted to a
@@ -143,6 +143,17 @@ class Big with EquatableMixin {
   }
 
   Big.fromParams(this.s, this.e, this.c);
+
+  Big prec(int sd, int? _rm) {
+    if (sd != ~~sd || sd < 1 || sd > maxDp) {
+      throw BigError(description: invalid + 'precision', code: BigErrorCode.dp);
+    }
+    return round(
+      Big(this),
+      sd,
+      _rm != null ? RoundingMode.values.elementAtOrNull(_rm) : null,
+    );
+  }
 
   Big(dynamic n, {BigOption? options}) {
     // Duplicate
@@ -246,6 +257,60 @@ class Big with EquatableMixin {
       }
     }
     return x;
+  }
+
+  /*
+     * Return a new Big whose value is the square root of the value of this Big, rounded, if
+     * necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
+     */
+  Big sqrt() {
+    Big r, t;
+    String c;
+    var x = this;
+    double s = x.s.toDouble();
+    var e = x.e, half = Big('0.5');
+
+    // Zero?
+    if (x.c[0] == 0) return Big(x);
+
+    // Negative?
+    if (s < 0) {
+      throw BigError(
+          description: name + 'No square root', code: BigErrorCode.sqrt);
+    }
+
+    // Estimate.
+    s = math.sqrt(x.toNumber());
+    // Math.sqrt underflow/overflow?
+    // Re-estimate: pass x coefficient to Math.sqrt as integer, then adjust the result exponent.
+    if (s == 0 || s == 1 / 0) {
+      c = x.c.join('');
+      if (((c.length + e) & 1) != 0) {
+        c += '0';
+      }
+      s = math.sqrt(double.parse(c));
+      e = ((e + 1) ~/ 2 | 0) - (e < 0 ? 1 : e.toInt() & 1);
+      var _s = s.toStringAsExponential();
+      var predefined = s == 1 / 0 ? '5e' : _s.substring(0, _s.indexOf('e') + 1);
+      r = Big('$predefined$e');
+      // _s
+    } else {
+      r = Big(s);
+    }
+
+    e = r.e + (dp += 4);
+
+    // Newton-Raphson iteration.
+    do {
+      t = r;
+      r = half.times(t.add(x.div(t)));
+    } while (t.c.slice(0, e).join('') != r.c.slice(0, e).join(''));
+
+    return round(
+      r,
+      ((dp -= 4) + r.e + 1).toInt(),
+      RoundingMode.values.elementAtOrNull(rm),
+    );
   }
 
   /// Return a new Big whose value is the absolute value of this Big.
