@@ -7,6 +7,7 @@ void main() {
       expect(
         Big(value).toExponential(dp: decimalPlaces),
         expected.toString(),
+        reason: '$value dp:$decimalPlaces = $value',
       );
     }
 
