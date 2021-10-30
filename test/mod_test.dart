@@ -6,6 +6,11 @@ import '_utils.dart';
 
 main() {
   test('mod', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(a, b, expected) {
       expect(
         Big(a).mod(Big(b)).toString(),

@@ -4,6 +4,11 @@ import 'package:test/test.dart';
 
 void main() {
   test('prec', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     var t = (expected, value, p, [int? r]) {
       expect(
         Big(value).prec(p, r).toFixed(),

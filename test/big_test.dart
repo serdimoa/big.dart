@@ -6,7 +6,11 @@ import 'package:test/test.dart';
 void main() {
   group('A group of tests', () {
     setUp(() {
-      // Additional setup goes here.
+      // To default
+      Big.dp = 20;
+      Big.rm = 1;
+      Big.ne = -7;
+      Big.pe = 21;
     });
 
     test('First Test', () {

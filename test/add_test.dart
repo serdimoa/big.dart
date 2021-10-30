@@ -5,6 +5,11 @@ import '_utils.dart';
 
 void main() {
   test('plus', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(addendA, addendB, expected) {
       expect(
         Big(addendA).add(Big(addendB)).toString(),

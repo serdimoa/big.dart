@@ -13,6 +13,12 @@ void main() {
   }
 
   test('div test with multiple dp and rm', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
+
     Big.dp = 40;
     Big.rm = 1;
 

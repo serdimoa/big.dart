@@ -5,13 +5,17 @@ import '_utils.dart';
 
 void main() {
   test('minus', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(minuend, subtrahend, expected) {
       expect(
         Big(minuend).sub(Big(subtrahend)).toString(),
         expected.toString(),
         reason: "$minuend-$subtrahend=$expected",
       );
-      //test.areEqual(String(expected), String(new Big(minuend).minus(new Big(subtrahend))));
     }
 
     t(1, 0, 1);

@@ -10,6 +10,11 @@ extension StringExtension on String {
 
 void main() {
   test('round', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     int? u;
 
     t(expected, dynamic value, [int? decimalPlaces, int? roundingMode]) {

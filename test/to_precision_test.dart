@@ -9,6 +9,9 @@ void main() {
           reason: '$value.toPrecision($precision) = $expected');
     }
 
+    // To default
+    Big.ne = -7;
+    Big.pe = 21;
     Big.dp = 20;
     Big.rm = 1;
 

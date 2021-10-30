@@ -12,7 +12,11 @@ void main() {
    *  lt      less than
    *  lte     less than or equal to
    */
-
+  // To default
+  Big.dp = 20;
+  Big.rm = 1;
+  Big.ne = -7;
+  Big.pe = 21;
   t(a, _b, expected) {
     var b = Big(_b);
     expect(Big(a).cmp(b).toString(), expected.toString());

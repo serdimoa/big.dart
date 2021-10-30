@@ -5,6 +5,11 @@ import '_utils.dart';
 
 void main() {
   test('sqrt', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(root, value) {
       // test.areEqual(root, new Big(value).sqrt().toString())
       expect(

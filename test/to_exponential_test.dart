@@ -4,6 +4,11 @@ import 'package:test/test.dart';
 
 void main() {
   test('toExponential', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(expected, value, [int? decimalPlaces]) {
       expect(
         Big(value).toExponential(dp: decimalPlaces),

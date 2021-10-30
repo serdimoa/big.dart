@@ -4,6 +4,11 @@ import 'package:test/test.dart';
 
 void main() {
   test('toFixed', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     int? u;
 
     t(expected, value, [int? decimalPlaces]) {

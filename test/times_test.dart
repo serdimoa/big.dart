@@ -5,6 +5,11 @@ import '_utils.dart';
 
 void main() {
   test('times', () {
+    // To default
+    Big.dp = 20;
+    Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
     t(multiplicand, multiplier, expected) {
       expect(Big(multiplicand).times(Big(multiplier)).toString(),
           expected.toString(),

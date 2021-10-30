@@ -6,8 +6,12 @@ import './_utils.dart';
 
 void main() {
   test('abs', () {
+    // To default
     Big.dp = 20;
     Big.rm = 1;
+    Big.ne = -7;
+    Big.pe = 21;
+
     t(expected, value) {
       expect(
           Big(
