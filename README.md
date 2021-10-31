@@ -84,7 +84,7 @@ The maximum number of decimal places and the rounding mode used to round the res
 
 ```dart
 Big.dp = 10
-Big.rm = Big.roundHalfUp
+Big.rm = RoundingMode.roundHalfUp
 x = Big(2);
 y = Big(3);
 z = x.div(y)                           // "0.6666666667"
@@ -96,7 +96,7 @@ z.times(z).round(10)                   // "0.4444444445"
 
 The value of a Big number is stored in a decimal floating point format in terms of a coefficient, exponent and sign.
 
-```javascript
+```dart
 x = Big(-123.456);
 x.c                                    // [1,2,3,4,5,6]    coefficient (i.e. significand)
 x.e                                    // 2                exponent
