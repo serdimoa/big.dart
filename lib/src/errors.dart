@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 enum BigErrorCode {
   type,
   nan,
