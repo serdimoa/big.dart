@@ -10,8 +10,8 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
-![build](https://github.com/serdimoa/big.dart/workflows/big.dart/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/serdimoa/big.dart/badge.svg)](https://coveralls.io/github/serdimoa/big.dart)
+![build](https://github.com/serdimoa/big.dart/workflows/big.dart/badge.svg)
 [![style: dart lint recommended](https://img.shields.io/badge/style-lints_recommended-40c4ff.svg)](https://pub.dev/packages/lints)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
