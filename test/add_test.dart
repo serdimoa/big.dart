@@ -20,6 +20,7 @@ void main() {
       //test.areEqual(String(expected), String(new Big(addendA).plus(new Big(addendB))));
     }
 
+    t(1, -2, -1);
     t(1, 0, 1);
     t(1, -0, 1);
     t(-1, 0, -1);

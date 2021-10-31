@@ -17,6 +17,13 @@ void main() {
   Big.rm = RoundingMode.values[1];
   Big.ne = -7;
   Big.pe = 21;
+
+  test('compareTo', () {
+    expect(Big(1).compareTo(Big(2)), -1);
+    expect(Big(2).compareTo(Big(1)), 1);
+    expect(Big(2).compareTo(Big(2)), 0);
+  });
+
   t(a, _b, expected) {
     var b = Big(_b);
     expect(Big(a).cmp(b).toString(), expected.toString());
