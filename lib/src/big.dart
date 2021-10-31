@@ -9,21 +9,16 @@ import 'package:equatable/equatable.dart';
 import 'dart:math' as math;
 
 extension BigList<T> on List<T> {
-  List<T> slice(int begin, [int? end]) {
-    var nextEnd = end;
-    if (end != null) {
-      if (end > length) {
-        nextEnd = length;
-      }
+  List<T> slice(int begin, int end) {
+    int nextEnd;
+
+    if (end > length) {
+      nextEnd = length;
+    } else {
+      nextEnd = end;
     }
-    return getRange(
-            begin,
-            nextEnd == null
-                ? length
-                : nextEnd < 0
-                    ? length + nextEnd
-                    : nextEnd)
-        .toList();
+
+    return getRange(begin, nextEnd < 0 ? length + nextEnd : nextEnd).toList();
   }
 }
 
@@ -187,9 +182,6 @@ class Big extends Comparable<Big> with EquatableMixin {
         description: invalid + 'number',
         code: BigErrorCode.type,
       );
-    }
-    if (n is! String) {
-      n = n.toString();
     }
 
     // Determine sign.
@@ -369,8 +361,8 @@ class Big extends Comparable<Big> with EquatableMixin {
       y.c = [y.e = 0];
       return y;
     }
-    int? bl, cmp;
-    int n, ri;
+    int? cmp;
+    int n, ri, bl;
     List<int> bt;
     var bz = [...b],
         ai = bl = b.length,

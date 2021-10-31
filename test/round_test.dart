@@ -28,8 +28,8 @@ void main() {
       );
     }
 
+    t('123.5', 123.45, 1, 3);
     t(-568, -'567.89', u, u);
-
     Big.dp = 20;
     Big.rm = RoundingMode.values[1];
 
