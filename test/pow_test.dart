@@ -7,7 +7,7 @@ void main() {
     int maxPower = 1e6.toInt();
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
 
@@ -20,7 +20,7 @@ void main() {
     }
 
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t(4, 2, 2);
     t(2147483648, 2, 31);
@@ -1155,7 +1155,7 @@ void main() {
     // decimal places and rounding mode specified:
 
     Big.dp = 40;
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
 
     t('0', '41', -25);
     t('0', '-26403', -25);
@@ -1178,7 +1178,7 @@ void main() {
     t('0', '-3338', -20);
 
     Big.dp = 101;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t('2.59086221967070203169073279093835370593438251373865163612424184820637293172653704e-21',
         '7280902.7', -3);
@@ -1210,7 +1210,7 @@ void main() {
         '-90503', -2);
 
     Big.dp = 99;
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
 
     t('3.50565137890907848896561225350273375702045873464e-52', '282', -21);
     t('2.5679471225603104166379068675724780241775210532444313569170923793768408333314758e-20',
@@ -1310,7 +1310,7 @@ void main() {
     t('0', '262233', -24);
 
     Big.dp = 0;
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
 
     t('0', '-8645', -30);
     t('0', '7.24173993', -23);
@@ -1355,7 +1355,7 @@ void main() {
     // ROUND_UP
 
     Big.dp = 38;
-    Big.rm = 3;
+    Big.rm = RoundingMode.values[3];
 
     t('1.38465005906932202803554e-15', '72', -8);
     t('3.9341179571912775217040566e-13', '9', -13);

@@ -7,7 +7,6 @@ import 'package:big/src/stringify.dart';
 import 'package:big/src/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'dart:math' as math;
-// import 'package:collection/collection.dart';
 
 extension BigList<T> on List<T> {
   List<T> slice(int begin, [int? end]) {
@@ -70,13 +69,13 @@ extension ListEx<T> on List<T> {
   }
 }
 
-var numeric = RegExp(
+var _numeric = RegExp(
   r"^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$",
   caseSensitive: false,
   multiLine: false,
 );
 
-class Big with EquatableMixin {
+class Big extends Comparable<Big> with EquatableMixin {
   /// Returns an array of single digits
   late List<int> c;
 
@@ -86,44 +85,37 @@ class Big with EquatableMixin {
   /// Returns the sign, -1 or 1
   late int s;
 
-  /// ************************************ EDITABLE DEFAULTS *****************************************/
-
   // The default values below must be integers within the stated ranges.
 
-  /// The maximum number of decimal places (DP) of the results of operations involving division:
+  /// The maximum number of decimal places (dp) of the results of operations involving division:
   /// div and sqrt, and pow with negative exponents.
-  static var dp = 20; // 0 to MAX_DP
+  static var dp = 20; // 0 to maxDp
 
-  /// The rounding mode (RM) used when rounding to the above decimal places.
-  ///  0  Towards zero (i.e. truncate, no rounding).       (ROUND_DOWN)
-  ///  1  To nearest neighbour. If equidistant, round up.  (ROUND_HALF_UP)
-  ///  2  To nearest neighbour. If equidistant, to even.   (ROUND_HALF_EVEN)
-  ///  3  Away from zero.                                  (ROUND_UP)
-  static int rm = 1; // 0, 1, 2 or 3
-  get RM => rm;
+  /// The rounding mode (rm) used when rounding to the above decimal places.
+  static RoundingMode rm = RoundingMode.roundHalfUp;
 
-  /// The maximum value of DP and Big.DP.
+  RoundingMode get RM => rm;
+
+  /// The maximum value of dp and [Big.dp].
   final maxDp = 1E6; // 0 to 1000000
 
   /// The maximum magnitude of the exponent argument to the pow method.
   final maxPower = 1E6; // 1 to 1000000
 
-  ///  The negative exponent (NE) at and beneath which toString returns exponential notation.
-  ///   (JavaScript numbers: -7)
-  ///   -1000000 is the minimum recommended exponent value of a Big.
+  ///  The negative exponent (ne) at and beneath which toString returns exponential notation.
+  ///   (Dart numbers: -7)
+  ///   -1000000 is the minimum recommended exponent value of a [Big].
   static var ne = -7; // 0 to -1000000
 
-  /// The positive exponent (PE) at and above which toString returns exponential notation.
-  /// (JavaScript numbers: 21)
-  /// 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
+  /// The positive exponent (pe) at and above which toString returns exponential notation.
+  /// (Dart numbers: 21)
+  /// 1000000 is the maximum recommended exponent value of a [Big], but this limit is not enforced.
   static var pe = 21; // 0 to 1000000
 
   /// When true, an error will be thrown if a primitive number is passed to the Big constructor,
   /// or if valueOf is called, or if toNumber is called on a Big which cannot be converted to a
   /// primitive number without a loss of precision.
   static var strict = false; // true or false
-
-  /// ************************************************************************************************/
 
   // Error messages.
   static const name = '[big.dart] ';
@@ -140,14 +132,19 @@ class Big with EquatableMixin {
     }
   }
 
-  Big prec(int sd, int? _rm) {
+  /// Return a new Big whose value is the value of this Big rounded to a maximum precision of sd
+  /// significant digits using rounding mode rm, or Big.rm if rm is not specified.
+  ///
+  /// sd [int] Significant digits: integer, 1 to MAX_DP inclusive.
+  /// rm? [RoundingMode] Rounding mode.
+  Big prec(int sd, [RoundingMode? _rm]) {
     if (sd != ~~sd || sd < 1 || sd > maxDp) {
       throw BigError(description: invalid + 'precision', code: BigErrorCode.dp);
     }
     return round(
       Big(this),
       sd,
-      _rm != null ? RoundingMode.values.elementAtOrNull(_rm) : null,
+      _rm,
     );
   }
 
@@ -180,13 +177,12 @@ class Big with EquatableMixin {
   }
 
   /// Parse the number or string value passed to a Big constructor.
-  ///  x {Big} A Big number instance.
-  ///  n {number|string} A numeric value.
-  Big parse(Big x, dynamic n) {
+  ///  x [Big] A Big number instance.
+  ///  n [String] A numeric value.
+  Big parse(Big x, String n) {
     int e, i, nl;
-    // print(n);
 
-    if (!numeric.hasMatch(n)) {
+    if (!_numeric.hasMatch(n)) {
       throw BigError(
         description: invalid + 'number',
         code: BigErrorCode.type,
@@ -246,10 +242,8 @@ class Big with EquatableMixin {
     return x;
   }
 
-  /*
-     * Return a new Big whose value is the square root of the value of this Big, rounded, if
-     * necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
-     */
+  /// Return a new [Big] whose value is the square root of the value of this [Big], rounded, if
+  /// necessary, to a maximum of [Big.dp] decimal places using rounding mode [Big.rm].
   Big sqrt() {
     Big r, t;
     String c;
@@ -296,22 +290,24 @@ class Big with EquatableMixin {
     return round(
       r,
       ((dp -= 4) + r.e + 1).toInt(),
-      RoundingMode.values.elementAtOrNull(rm),
+      rm,
     );
   }
 
-  /// Return a new Big whose value is the absolute value of this Big.
+  /// Return a new [Big] whose value is the absolute value of this [Big].
   Big abs() {
     var x = this;
     x.s = 1;
     return x;
   }
 
-  /// Return 1 if the value of this Big is greater than the value of Big y,
-  ///       -1 if the value of this Big is less than the value of Big y, or
-  ///        0 if they have the same value.
+  /// Compare two [Big]
+  ///
+  /// * `1` if the value of this [Big] is greater than the value of [Big] [y],
+  /// * `-1` if the value of this [Big] is less than the value of [Big] [y],
+  /// * `0` if they have the same value.
   int cmp(Big y) {
-    bool isneg;
+    bool isNegative;
     var x = this, xc = x.c, yc = y.c, i = x.s, j = y.s, k = x.e, l = y.e;
 
     // Either zero?
@@ -326,30 +322,30 @@ class Big with EquatableMixin {
     // Signs differ?
     if (i != j) return i;
 
-    isneg = i < 0;
+    isNegative = i < 0;
 
     // Compare exponents.
     if (k != l) {
-      return (k > l) ^ isneg ? 1 : -1;
+      return (k > l) ^ isNegative ? 1 : -1;
     }
 
     j = (k = xc.length) < (l = yc.length) ? k : l;
 
     // Compare digit by digit.
     for (i = -1; ++i < j;) {
-      if (xc[i] != yc[i]) return (xc[i] > yc[i]) ^ isneg ? 1 : -1;
+      if (xc[i] != yc[i]) return (xc[i] > yc[i]) ^ isNegative ? 1 : -1;
     }
 
     // Compare lengths.
     return k == l
         ? 0
-        : (k > l) ^ isneg
+        : (k > l) ^ isNegative
             ? 1
             : -1;
   }
 
-  /// Return a new Big whose value is the value of this Big divided by the value of Big y, rounded,
-  /// if necessary, to a maximum of Big.DP decimal places using rounding mode Big.RM.
+  /// Return a new [Big] whose value is the value of this [Big] divided by the value of [Big] y, rounded,
+  /// if necessary, to a maximum of [Big.dp] decimal places using rounding mode [Big.rm].
   Big div(Big y) {
     y = Big(y);
     var x = this,
@@ -465,47 +461,47 @@ class Big with EquatableMixin {
 
     // Round?
     if (qi > p) {
-      round(q, p, RoundingMode.values[rm], more: r.firstOrNull != null);
+      round(q, p, rm, more: r.firstOrNull != null);
     }
 
     return q;
   }
 
-  /// Return true if the value of this Big is equal to the value of Big y, otherwise return false.
+  /// Return true if the value of this [Big] is equal to the value of [Big] y, otherwise return false.
   bool eq(Big y) {
     return cmp(y) == 0;
   }
 
-  /// Return true if the value of this Big is greater than the value of Big y, otherwise return
+  /// Return true if the value of this [Big] is greater than the value of [Big] y, otherwise return
   /// false.
   bool gt(Big y) {
     return cmp(y) > 0;
   }
 
-  /// Return true if the value of this Big is greater than or equal to the value of Big y, otherwise
+  /// Return true if the value of this [Big] is greater than or equal to the value of [Big] y, otherwise
   /// return false.
   bool gte(Big y) {
     return cmp(y) > -1;
   }
 
-  /// Return true if the value of this Big is less than the value of Big y, otherwise return false.
+  /// Return true if the value of this [Big] is less than the value of [Big] y, otherwise return false.
   bool lt(Big y) {
     return cmp(y) < 0;
   }
 
-  ///  Return true if the value of this Big is less than or equal to the value of Big y, otherwise
+  ///  Return true if the value of this [Big] is less than or equal to the value of [Big] y, otherwise
   ///  return false.
   bool lte(Big y) {
     return cmp(y) < 1;
   }
 
-  /// Return a new Big whose value is the value of this Big minus the value of Big y.
+  /// Return a new [Big] whose value is the value of this [Big] minus the value of [Big] y.
   Big sub(Big y) {
     y = Big(y);
     int i, j;
     List<int> t;
-    bool xlty;
     var x = this, a = x.s, b = y.s;
+    bool isXLtY;
     // Signs differ?
     if (a != b) {
       y.s = -b;
@@ -529,7 +525,7 @@ class Big with EquatableMixin {
     a = xe - ye;
     // Determine which is the bigger number. Prepend zeros to equalise exponents.
     if (a != 0) {
-      if (xlty = a < 0) {
+      if (isXLtY = a < 0) {
         a = -a;
         t = xc;
       } else {
@@ -545,28 +541,27 @@ class Big with EquatableMixin {
       t.reverse();
     } else {
       // Exponents equal. Check digit by digit.
-      j = ((xlty = xc.length < yc.length) ? xc : yc).length;
+      j = ((isXLtY = xc.length < yc.length) ? xc : yc).length;
 
       for (a = b = 0; b < j; b++) {
         if (xc[b] != yc[b]) {
-          xlty = xc[b] < yc[b];
+          isXLtY = xc[b] < yc[b];
           break;
         }
       }
     }
 
     // x < y? Point xc to the array of the bigger number.
-    if (xlty) {
+    if (isXLtY) {
       t = xc;
       xc = yc;
       yc = t;
       y.s = -y.s;
     }
 
-    /*
-       * Append zeros to xc if shorter. No need to add zeros to yc if shorter as subtraction only
-       * needs to start at yc.length.
-       */
+    /// Append zeros to xc if shorter. No need to add zeros to yc if shorter as subtraction only
+    /// needs to start at yc.length.
+
     if ((b = (j = yc.length) - (i = xc.length)) > 0) {
       for (; b > 0;) {
         b--;
@@ -615,11 +610,9 @@ class Big with EquatableMixin {
     return y;
   }
 
-  /*
-     * Return a new Big whose value is the value of this Big modulo the value of Big y.
-     */
+  /// Return a new [Big] whose value is the value of this [Big] modulo the value of [Big] y.
   Big mod(Big y) {
-    bool ygtx;
+    bool isYgtX;
     y = Big(y);
     var x = this, a = x.s, b = y.s;
 
@@ -628,21 +621,22 @@ class Big with EquatableMixin {
     }
 
     x.s = y.s = 1;
-    ygtx = y.cmp(x) == 1;
+    isYgtX = y.cmp(x) == 1;
     x.s = a;
     y.s = b;
-    if (ygtx) return Big(x);
+    if (isYgtX) return Big(x);
 
+    var tempRm = rm;
     a = dp;
-    b = rm;
-    dp = rm = 0;
+    rm = RoundingMode.roundDown;
+    dp = 0;
     x = x.div(y);
     dp = a;
-    rm = b;
+    rm = tempRm;
     return sub(x.times(y));
   }
 
-  /// Return a new Big whose value is the value of this Big plus the value of Big y.
+  /// Return a new Big whose value is the value of this [Big] plus the value of [Big] y.
   Big add(Big y) {
     int e, k;
     List<int> t;
@@ -670,7 +664,6 @@ class Big with EquatableMixin {
     xc = [...xc];
 
     // Prepend zeros to equalise exponents.
-    // Note: reverse faster than unshifts.
     e = xe - ye;
     if (e != 0) {
       if (e > 0) {
@@ -721,18 +714,18 @@ class Big with EquatableMixin {
     return y;
   }
 
-  /// Return a Big whose value is the value of this Big raised to the power n.
-  /// If n is negative, round to a maximum of Big.DP decimal places using rounding
-  /// mode Big.RM.
-  /// n {number} Integer, -MAX_POWER to MAX_POWER inclusive.
+  /// Return a [Big] whose value is the value of this [Big] raised to the power [n].
+  /// If [n] is negative, round to a maximum of [Big.dp] decimal places using rounding
+  /// mode [Big.rm].
+  /// n [int] Integer, -[maxPower] to [maxPower] inclusive.
   Big pow(int n) {
-    var x = this, one = Big('1'), y = one, isneg = n < 0;
+    var x = this, one = Big('1'), y = one, isNegative = n < 0;
 
     if (n != ~~n || n < -maxPower || n > maxPower) {
       throw BigError(code: BigErrorCode.pow, description: invalid + 'exponent');
     }
 
-    if (isneg) n = -n;
+    if (isNegative) n = -n;
 
     for (;;) {
       if ((n & 1) != 0) y = y.times(x);
@@ -741,10 +734,10 @@ class Big with EquatableMixin {
       x = x.times(x);
     }
 
-    return isneg ? one.div(y) : y;
+    return isNegative ? one.div(y) : y;
   }
 
-  /// Return a new Big whose value is the value of this Big times the value of Big y.
+  /// Return a new [Big] whose value is the value of this [Big] times the value of Big y.
   Big times(Big y) {
     List<int> c;
     y = Big(y);
@@ -815,11 +808,10 @@ class Big with EquatableMixin {
     return y;
   }
 
-  /// Return a string representing the value of this Big in exponential notation rounded to dp fixed
-  /// decimal places using rounding mode rm, or Big.RM if rm is not specified.
-
-  /// dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
-  /// rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+  /// Return a string representing the value of this [Big] in exponential notation rounded to [dp] fixed
+  /// decimal places using rounding mode [rm], or [Big.rm] if [rm] is not specified.
+  /// dp? [int] Decimal places: integer, 0 to maxDp inclusive.
+  /// rm? [RoundingMode] Rounding mode
   String toExponential({int? dp, RoundingMode? rm}) {
     var x = this, n = x.c[0];
 
@@ -836,16 +828,15 @@ class Big with EquatableMixin {
     return stringify(x, true, n != 0);
   }
 
-  /*
-     * Return a string representing the value of this Big in normal notation rounded to dp fixed
-     * decimal places using rounding mode rm, or Big.RM if rm is not specified.
-     *
-     * dp? {number} Decimal places: integer, 0 to MAX_DP inclusive.
-     * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
-     *
-     * (-0).toFixed(0) is '0', but (-0.1).toFixed(0) is '-0'.
-     * (-0).toFixed(1) is '0.0', but (-0.01).toFixed(1) is '-0.0'.
-     */
+  /// Return a string representing the value of this Big in normal notation rounded to dp fixed
+  /// decimal places using rounding mode [rm], or [Big.rm] if rm is not specified.
+  ///
+  /// dp? [int] Decimal places: integer, 0 to maxDp inclusive.
+  /// rm? [RoundingMode] Rounding mode.
+  ///
+  /// (-0).toFixed(dp:0) is '0', but (-0.1).toFixed(dp:0) is '-0'.
+  /// (-0).toFixed(dp:1) is '0.0', but (-0.01).toFixed(dp:1) is '-0.0'.
+  ///
   String toFixed({int? dp, RoundingMode? rm}) {
     var x = this, n = x.c[0];
 
@@ -888,10 +879,10 @@ class Big with EquatableMixin {
   }
 
   /// Return a string representing the value of this Big rounded to sd significant digits using
-  /// rounding mode rm, or Big.RM if rm is not specified.
+  /// rounding mode rm, or Big.rm if rm is not specified.
   /// Use exponential notation if sd is less than the number of digits necessary to represent
   /// the integer part of the value in normal notation.
-  /// sd {number} Significant digits: integer, 1 to MAX_DP inclusive.
+  /// sd {number} Significant digits: integer, 1 to maxDp inclusive.
   /// rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
 
   String toPrecision([int? sd, RoundingMode? rm]) {
@@ -935,7 +926,7 @@ class Big with EquatableMixin {
   @override
   List<Object?> get props => [c, e, s];
 
-  Big selfRound([int? dp, int? roundingMode]) {
+  Big selfRound([int? dp, RoundingMode? roundingMode]) {
     if (dp == null) {
       dp = 0;
     } else if (dp != ~~dp || dp < -maxDp || dp > maxDp) {
@@ -944,8 +935,13 @@ class Big with EquatableMixin {
     return round(
       Big(this),
       dp + e + 1,
-      RoundingMode.values.elementAtOrNull(roundingMode ?? 99),
+      roundingMode,
     );
+  }
+
+  @override
+  int compareTo(other) {
+    return cmp(other);
   }
 }
 

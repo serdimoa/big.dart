@@ -7,7 +7,7 @@ void main() {
   test('minus', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
     t(minuend, subtrahend, expected) {

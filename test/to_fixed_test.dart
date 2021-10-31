@@ -6,7 +6,7 @@ void main() {
   test('toFixed', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
     int? u;
@@ -20,7 +20,7 @@ void main() {
     }
 
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t('0.0', 0, 1);
     t('0.0', 0, 1);
@@ -111,7 +111,7 @@ void main() {
     t('234.2041', 234.20405, 4);
     t('234.2041', '234.204050000000000000000000000000006', 4);
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
 
     t('0.3', '0.3', 1);
     t('-200258348374.3',
@@ -262,7 +262,7 @@ void main() {
         '29485932208290816133111088923502731', 6);
     t('0.0000', '0.000000000006', 4);
 
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t('733744593401073823825766410831877679446.0000000000000000000',
         '733744593401073823825766410831877679446', 19);
@@ -401,7 +401,7 @@ void main() {
         '-637697600918508531049573689760309.5119477', 16);
     t('-6.19247283', '-6.19247282501186063445037314', 8);
 
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
 
     t('-6614662975368684488885953285955838893900074215956.00',
         '-6614662975368684488885953285955838893900074215956', 2);
@@ -524,7 +524,7 @@ void main() {
     t('1.5', '1.5', u);
     t('-1.5', '-1.5', u);
 
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t('-535564000.00', '-535564000', 2);
     t('-80000000.000', '-80000000', 3);
@@ -1333,7 +1333,7 @@ void main() {
     // test.isException(function () {new Big(1.23).toFixed('-Infinity')}, "'-Infinity'");
 
     // ROUND_UP
-    Big.rm = 3;
+    Big.rm = RoundingMode.values[3];
 
     t('0.0', '0', 1);
     t('0.1', '0.1', 1);
@@ -1355,7 +1355,7 @@ void main() {
 
     /*
   Big.dp = 20;
-  Big.rm = 1;
+  Big.rm = RoundingMode.values[1];
 
   Big.DS = '.';  // decimal separator
   Big.TS = ',';  // thousands separator

@@ -15,12 +15,12 @@ void main() {
   test('div test with multiple dp and rm', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
 
     Big.dp = 40;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     isPositiveZero((Big.zero().div(1.toBig)));
     isNegativeZero((Big.zero().div((-1).toBig)));
@@ -36,7 +36,7 @@ void main() {
     e(1, '1', '1');
     e(1, '-45', '-0.0222222222222222222222222222222222222222');
     e(1, '22', '0.0454545454545454545454545454545454545455');
-    // TODO investigate to problemasync
+    // TODO investigate to problem async
     // e(1, 0144, '0.01');
     e(1, '0144', '0.0069444444444444444444444444444444444444');
     e(1, '6.1915', '0.1615117499798110312525236210934345473633');
@@ -65,7 +65,7 @@ void main() {
     e('99999', '1', '99999');
 
     Big.dp = 0;
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
 
     e('999.5', 1, '999');
     e('-999.5', 1, '-999');
@@ -73,7 +73,7 @@ void main() {
     e('-998.5', 1, '-998');
 
     Big.dp = 0;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     e('999.5', 1, '1000');
     e('-999.5', 1, '-1000');
@@ -81,7 +81,7 @@ void main() {
     e('-998.5', 1, '-999');
 
     Big.dp = 0;
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
 
     e('999.5', 1, '1000');
     e('-999.5', 1, '-1000');
@@ -96,29 +96,29 @@ void main() {
     e('998.500001', 1, '999');
     e('-998.500001', 1, '-999');
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     Big.dp = 2;
 
     e('0', '-19', '0');
     e('-0.000000000000004556', '-2021.9', '0');
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     Big.dp = 5;
 
     e('2', '8639.4', '0.00023');
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     Big.dp = 7;
 
     e('-2949.53', '48.6', '-60.6899176');
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     Big.dp = 8;
 
     e('1.80', '-214368', '-0.00000839');
 
     Big.dp = 0;
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     e('-8', '0.00000000000190', '-4210526315789');
 
     Big.dp = 4;
@@ -561,7 +561,7 @@ void main() {
     Big.dp = 3;
     e('-0.0000000000000010', '51.6', '0');
 
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
     Big.dp = 9;
     e('21.4', '9', '2.377777778');
     Big.dp = 7;
@@ -649,7 +649,7 @@ void main() {
     Big.dp = 1;
     e('-1', '159.44', '0');
 
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.dp = 0;
     e('-1.5e+1', '-3e+0', '5');
     Big.dp = 1;
@@ -753,7 +753,7 @@ void main() {
     Big.dp = 0;
     e('4e+0', '-2e+0', '-2');
 
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
     Big.dp = 35;
     e('2395718.91845', '2.3790141850',
         '1007021.7040130847307242936846969661931629');
@@ -6180,7 +6180,7 @@ void main() {
         '-1.011639043375458565019581253273811436497002772436263898851530315451611798947892459591145152e+78',
         '0.9886162205695513034942161330237927305624084');
 
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.dp = 92;
     e('2.11074887e-15', '5.201532e+3',
         '4.0579369116637175355260719341916958311512838909767353156723826749503800034e-19');
@@ -11548,7 +11548,7 @@ void main() {
         '3.639585621623103744457e+16',
         '-1.552346333853081888016311886511697613094675863746907091555575044156718813752e-10');
 
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
     Big.dp = 58;
     e('-3.47161e+3', '6.14e+0',
         '-565.4087947882736156351791530944625407166123778501628664495114');
@@ -17201,7 +17201,7 @@ void main() {
         '-2470.17753857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857');
 
     // Invalid 'Big.dp's
-    Big.rm = 0;
+    Big.rm = RoundingMode.values[0];
 
     // test.isException(function () { Big.dp = undefined; e(4, 2, 2) }, "Big.dp = undefined");
     // Big.dp = 2;
@@ -17296,100 +17296,100 @@ void main() {
 
     // // Invalid 'Big.rm's
     // test.isException(function () { Big.rm = undefined; e(1, 3, 0.3) }, "Big.rm = undefined");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1', '21', '0.04');
     // test.isException(function () { Big.rm = null; e(1, 3, 0.3) }, "Big.rm = null");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1.31', '-1.001', '-1.3');
     // test.isException(function () { Big.rm = NaN; e(1, 3, 0.3) }, "Big.rm = NaN");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-31', '2.81', '-11.03');
     // test.isException(function () { Big.rm = 'NaN'; e(1, 3, 0.3) }, "Big.rm = 'NaN'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('25.31', '-0.00000551', '-4593466.42');
     // test.isException(function () { Big.rm = []; e(1, 3, 0.3) }, "Big.rm = []");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('131', '61', '2.14');
     // test.isException(function () { Big.rm = {}; e(1, 3, 0.3) }, "Big.rm = {}");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('0.0000271', '1.51', '0');
     // test.isException(function () { Big.rm = ''; e(1, 3, 0.3) }, "Big.rm = ''");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1.81', '91', '0.01');
     // test.isException(function () { Big.rm = ' '; e(1, 3, 0.3) }, "Big.rm = ' '");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-31', '1', '-31');
     // test.isException(function () { Big.rm = 'hello'; e(1, 3, 0.3) }, "Big.rm = 'hello'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('601', '-31', '-19.38');
     // test.isException(function () { Big.rm = '\t'; e(1, 3, 0.3) }, "Big.rm = '\t'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('41', '-1', '-41');
     // test.isException(function () { Big.rm = Date; e(1, 3, 0.3) }, "Big.rm = new Date");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1', '-11', '-0.09');
     // test.isException(function () { Big.rm = RegExp; e(1, 3, 0.3) }, "Big.rm = new RegExp");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('31', '-1.51', '-20.52');
     // test.isException(function () { Big.rm = function () {}; e(1, 3, 0.3) }, "Big.rm = function () {} ");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-81', '-301', '0.26');
     // test.isException(function () { Big.rm = -1; e(1, 3, 0.3) }, "Big.rm = -1");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1', '71', '0.01');
     // test.isException(function () { Big.rm = 3.1; e(1, 3, 0.3) }, "Big.rm = 3.1");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1', '1061', '0');
     // test.isException(function () { Big.rm = 1.5; e(1, 3, 0.3) }, "Big.rm = 1.5");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-11', '-1', '11');
     // test.isException(function () { Big.rm = 0.1; e(1, 3, 0.3) }, "Big.rm = 0.1");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-1.91', '-0.0001331', '14350.11');
     // test.isException(function () { Big.rm = 7.5; e(1, 3, 0.3) }, "Big.rm = 7.5");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-1.11', '0.291', '-3.81');
     // test.isException(function () { Big.rm = '0'; e(1, 3, 0.3) }, "Big.rm = '0'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-1', '2.21', '-0.45');
     // test.isException(function () { Big.rm = '1'; e(1, 3, 0.3) }, "Big.rm = '1'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1.321', '1.01', '1.3');
     // test.isException(function () { Big.rm = '1.2'; e(1, 3, 0.3) }, "Big.rm = '1.2'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1', '-1.01', '-0.99');
     // test.isException(function () { Big.rm = '99'; e(1, 3, 0.3) }, "Big.rm = '99'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('11', '1', '11');
     // test.isException(function () { Big.rm = '1.1e1'; e(1, 3, 0.3) }, "Big.rm = '1.1e1'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-81', '8.91', '-9.09');
     // test.isException(function () { Big.rm = '-1'; e(1, 3, 0.3) }, "Big.rm = '-1'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-21', '21', '-1');
     // test.isException(function () { Big.rm = -23; e(1, 3, 0.3) }, "Big.rm = -23");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('8.31', '-21', '-0.39');
     // test.isException(function () { Big.rm = 1e9; e(1, 3, 0.3) }, "Big.rm = 1e9 + 1");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('1.31', '11', '0.11');
     // test.isException(function () { Big.rm = 1e9; e(1, 3, 0.3) }, "Big.rm = 1e9 + 1");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('11', '-61', '-0.18');
     // test.isException(function () { Big.rm = '-0.01'; e(1, 3, 0.3) }, "Big.rm = '-0.01'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('7.71', '-31', '-0.24');
     // test.isException(function () { Big.rm = '-1e-1'; e(1, 3, 0.3) }, "Big.rm = '-1e-1'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('0.321', '-51', '0');
     // test.isException(function () { Big.rm = Infinity; e(1, 3, 0.3) }, "Big.rm = Infinity");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('0.00111', '-11', '0');
     // test.isException(function () { Big.rm = '-Infinity'; e(1, 3, 0.3) }, "Big.rm = '-Infinity'");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('-21', '0.000271', '-77490.77');
     // test.isException(function () { Big.rm = Big('2'); e(1, 3, 0.3) }, "Big.rm = new Big('2')");
-    // Big.rm = 0;
+    // Big.rm = RoundingMode.values[0];
     // e('3.91', '0.0481', '81.28');
 
     // e('1', '.1', '10');
@@ -17440,7 +17440,7 @@ void main() {
 
     // ROUND_UP
     Big.dp = 0;
-    Big.rm = 3;
+    Big.rm = RoundingMode.values[3];
     e(0, 1, '0');
     e('0.0', 1, '0');
     e('0.1', 1, '1');

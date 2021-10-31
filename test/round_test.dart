@@ -12,14 +12,17 @@ void main() {
   test('round', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
     int? u;
 
     t(expected, dynamic value, [int? decimalPlaces, int? roundingMode]) {
       expect(
-        Big(value).selfRound(decimalPlaces, roundingMode).toString(),
+        Big(value)
+            .selfRound(decimalPlaces,
+                RoundingMode.values.elementAtOrNull(roundingMode ?? 99))
+            .toString(),
         expected.toString(),
         reason: '$value.round($decimalPlaces, $roundingMode) = $expected',
       );
@@ -28,7 +31,7 @@ void main() {
     t(-568, -'567.89', u, u);
 
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     t('0', '0.000084888060736883027314038572334303632');
     t('30845717889906383053', '30845717889906383052.56472015469740823');
@@ -597,7 +600,7 @@ void main() {
     t('12', '12.345', u);
 
     Big.dp = 20;
-    Big.rm = 2;
+    Big.rm = RoundingMode.values[2];
 
     t(1, 1.23, u, u);
     t(-1, -1.23, u, u);
@@ -8080,7 +8083,7 @@ void main() {
     // test.isException(function () {new Big('12.345').round(u, new Big('2'))}, ".round(u, new Big('2'))");
 
     // Tests for rm 3, ROUND_UP, i.e. round away from zero.
-    Big.rm = 3;
+    Big.rm = RoundingMode.values[3];
 
     t(0, 0);
     t(0, -0);

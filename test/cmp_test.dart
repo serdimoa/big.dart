@@ -14,7 +14,7 @@ void main() {
    */
   // To default
   Big.dp = 20;
-  Big.rm = 1;
+  Big.rm = RoundingMode.values[1];
   Big.ne = -7;
   Big.pe = 21;
   t(a, _b, expected) {
@@ -45,7 +45,7 @@ void main() {
   test('cmp, eq, gt, gte, lt, lte', () {
     var n = Big(1);
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
 
     expect(n.eq(n), true);
     expect(n.eq(1.toBig), true);

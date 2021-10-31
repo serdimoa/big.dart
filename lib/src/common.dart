@@ -12,7 +12,7 @@ enum RoundingMode {
   /// I.e. truncate, no rounding.
   roundDown,
 
-  /// 1
+  ///  1
   ///  Rounds towards nearest neighbour.
   ///  If equidistant, rounds away from zero.
   roundHalfUp,

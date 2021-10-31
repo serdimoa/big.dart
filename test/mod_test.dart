@@ -8,7 +8,7 @@ main() {
   test('mod', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
     t(a, b, expected) {
@@ -20,7 +20,7 @@ main() {
     }
 
     Big.dp = 20;
-    Big.rm = 4;
+    Big.rm = RoundingMode.values[1];
 
     t(1, -0.1, '0'); // JS:   0.09999999999999995
 

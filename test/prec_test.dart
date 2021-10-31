@@ -6,19 +6,21 @@ void main() {
   test('prec', () {
     // To default
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
     var t = (expected, value, p, [int? r]) {
       expect(
-        Big(value).prec(p, r).toFixed(),
+        Big(value)
+            .prec(p, r != null ? RoundingMode.values.elementAtOrNull(r) : null)
+            .toFixed(),
         expected.toString(),
         reason: "$value p:$p r:$r = $expected",
       );
     };
 
     Big.dp = 20;
-    Big.rm = 1;
+    Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
 
@@ -537,7 +539,9 @@ void main() {
 
     t = (expected, value, p, [int? r]) {
       expect(
-        Big(value).prec(p, r).toExponential(),
+        Big(value)
+            .prec(p, r != null ? RoundingMode.values.elementAtOrNull(r) : null)
+            .toExponential(),
         expected.toString(),
         reason: "$value p:$p r:$r = $expected",
       );

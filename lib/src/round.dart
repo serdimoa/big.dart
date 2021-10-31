@@ -12,7 +12,7 @@ import 'package:big/src/utils.dart';
      */
 Big round(Big x, int sd, RoundingMode? rm, {bool more = false}) {
   var xc = x.c;
-  rm ??= RoundingMode.values[x.RM];
+  rm ??= x.RM;
   if (sd < 1) {
     more = rm == RoundingMode.roundUp && (more || xc.numberAtLikeJsTest(0)) ||
         sd == 0 &&
