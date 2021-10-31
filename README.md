@@ -24,7 +24,7 @@ A small library for arbitrary-precision decimal arithmetic inspired by [big.js](
 - Easier-to-use
 - Replicates the `toStringAsExponential`, `toStringAsFixed` and `toStringAsPrecision` methods of Dart Numbers
 - Stores values in an accessible decimal floating point format
-- Comprehensive [documentation](http://mikemcl.github.io/big.js/) and test set
+- Comprehensive [documentation](https://mikemcl.github.io/big.js/) and test set
 - Uses only Dart, so works in well where Dart work
 
 
