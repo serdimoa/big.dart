@@ -1,10 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:big/src/common.dart';
-import 'package:big/src/errors.dart';
-import 'package:big/src/round.dart';
-import 'package:big/src/stringify.dart';
-import 'package:big/src/utils.dart';
+import 'package:big_dart/src/common.dart';
+import 'package:big_dart/src/errors.dart';
+import 'package:big_dart/src/round.dart';
+import 'package:big_dart/src/stringify.dart';
+import 'package:big_dart/src/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'dart:math' as math;
 

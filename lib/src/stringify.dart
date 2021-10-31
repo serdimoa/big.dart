@@ -2,7 +2,7 @@
      * Return a string representing the value of Big x in normal or exponential notation.
      * Handles P.toExponential, P.toFixed, P.toJSON, P.toPrecision, P.toString and P.valueOf.
      */
-import 'package:big/src/big.dart';
+import 'package:big_dart/src/big_dart.dart';
 
 String stringify(Big x, bool doExponential, bool isNonzero) {
   var e = x.e, s = x.c.join(''), n = s.length;

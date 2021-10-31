@@ -1,4 +1,4 @@
-name: big
+name: big_dart
 description: A small, fast, easy-to-use library for arbitrary-precision decimal arithmetic.
 version: 1.0.0
 homepage: https://github.com/serdimoa/big.dart

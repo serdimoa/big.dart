@@ -1,6 +1,6 @@
-import 'package:big/src/big.dart';
-import 'package:big/src/common.dart';
-import 'package:big/src/utils.dart';
+import 'package:big_dart/src/big_dart.dart';
+import 'package:big_dart/src/common.dart';
+import 'package:big_dart/src/utils.dart';
 
 /*
      * Round Big x to a maximum of sd significant digits using rounding mode rm.

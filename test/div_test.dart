@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:big/big.dart';
+import 'package:big_dart/big_dart.dart';
 
 import './_utils.dart';
 

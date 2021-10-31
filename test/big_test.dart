@@ -1,6 +1,6 @@
-import 'package:big/big.dart';
+import 'package:big_dart/big_dart.dart';
 
-import 'package:big/src/common.dart';
+import 'package:big_dart/src/common.dart';
 import 'package:test/test.dart';
 
 void main() {
