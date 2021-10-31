@@ -4297,41 +4297,17 @@ main() {
         '2.3273061846552018803169584402231121660442419923712e+8',
         '-223270690.167863377964549603775416101373776776381683');
 
-    // test.isException(function () {Big(0).mod(0)}, ".mod(0)");
-    // test.isException(function () {Big('-1').mod(0)}, ".mod(0)");
-    // test.isException(function () {Big(9).mod(0)}, ".mod(0)");
-    // test.isException(function () {Big(9).mod('0')}, ".mod('0')");
-    // test.isException(function () {Big(9).mod('-0')}, ".mod('-0')");
-    // test.isException(function () {Big(9).mod('0.00')}, ".mod('0.00')");
-
-    // test.isException(function () {Big('12.345').mod(undefined)}, ".mod(undefined)");
-    // test.isException(function () {Big('12.345').mod(null)}, ".mod(null)");
-    // test.isException(function () {Big('12.345').mod(NaN)}, ".mod(NaN)");
-    // test.isException(function () {Big('12.345').mod('NaN')}, ".mod('NaN')");
-    // test.isException(function () {Big('12.345').mod([])}, ".mod([])");
-    // test.isException(function () {Big('12.345').mod({})}, ".mod({})");
-    // test.isException(function () {Big('12.345').mod('')}, ".mod('')");
-    // test.isException(function () {Big('12.345').mod(' ')}, ".mod(' ')");
-    // test.isException(function () {Big('12.345').mod('hello')}, ".mod('hello')");
-    // test.isException(function () {Big('12.345').mod('\t')}, ".mod('\t')");
-    // test.isException(function () {Big('12.345').mod(Date)}, ".mod(new Date)");
-    // test.isException(function () {Big('12.345').mod(RegExp)}, ".mod(new RegExp)");
-    // test.isException(function () {Big('12.345').mod(function () {})}, ".mod(function () {})");
-    // test.isException(function () {Big('12.345').mod(' 0.1')}, ".mod(' 0.1')");
-    // test.isException(function () {Big('12.345').mod('7.5 ')}, ".mod('7.5 ')");
-    // test.isException(function () {Big('12.345').mod(' 0 ')}, ".mod(' 0 ')");
-    // test.isException(function () {Big('12.345').mod('+1')}, ".mod('+1')");
-    // test.isException(function () {Big('12.345').mod(' +1.2')}, ".mod(' +1.2')");
-    // test.isException(function () {Big('12.345').mod('- 99')}, ".mod('- 99')");
-    // test.isException(function () {Big('12.345').mod('9.9.9')}, ".mod('9.9.9')");
-    // test.isException(function () {Big('12.345').mod('10.1.0')}, ".mod('10.1.0')");
-    // test.isException(function () {Big('12.345').mod('0x16')}, ".mod('0x16')");
-    // test.isException(function () {Big('12.345').mod('1e')}, ".mod('1e')");
-    // test.isException(function () {Big('12.345').mod('8 e')}, ".mod('8 e')");
-    // test.isException(function () {Big('12.345').mod('77-e')}, ".mod('77-e')");
-    // test.isException(function () {Big('12.345').mod('123e.0')}, ".mod('123e.0')");
-    // test.isException(function () {Big('12.345').mod('4e1.')}, ".mod('4e1.')");
-    // test.isException(function () {Big('12.345').mod(Infinity)}, ".mod(Infinity)");
-    // test.isException(function () {Big('12.345').mod('-Infinity')}, ".mod('-Infinity')");
+    checkException(
+      () {
+        Big(9).mod(Big.zero(isNegative: true));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(9).mod(Big.zero());
+      },
+      const TypeMatcher<BigError>(),
+    );
   });
 }

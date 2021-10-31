@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('toFixed', () {
     // To default
@@ -10,6 +12,13 @@ void main() {
     Big.ne = -7;
     Big.pe = 21;
     int? u;
+
+    checkException(
+      () {
+        Big(1.23).toFixed(dp: 1e7.toInt());
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     t(expected, value, [int? decimalPlaces]) {
       expect(
@@ -1300,37 +1309,6 @@ void main() {
     t('123.45', '12.345e1', u);
     t('123', '12.345e1', 0);
     t('123', '12.345e1', -0);
-
-    // test.isException(function () {new Big(1.23).toFixed(null)}, "null");
-    // test.isException(function () {new Big(1.23).toFixed(NaN)}, "NaN");
-    // test.isException(function () {new Big(1.23).toFixed('NaN')}, "'NaN'");
-    // test.isException(function () {new Big(1.23).toFixed([])}, "[]");
-    // test.isException(function () {new Big(1.23).toFixed({})}, "{}");
-    // test.isException(function () {new Big(1.23).toFixed('')}, "''");
-    // test.isException(function () {new Big(1.23).toFixed(' ')}, "' '");
-    // test.isException(function () {new Big(1.23).toFixed('hello')}, "'hello'");
-    // test.isException(function () {new Big(1.23).toFixed('\t')}, "'\t'");
-    // test.isException(function () {new Big(1.23).toFixed(new Date)}, "new Date");
-    // test.isException(function () {new Big(1.23).toFixed(new RegExp)}, "new RegExp");
-    // test.isException(function () {new Big(1.23).toFixed(2.01)}, "2.01");
-    // test.isException(function () {new Big(1.23).toFixed(10.5)}, "10.5");
-    // test.isException(function () {new Big(1.23).toFixed('1.1e1')}, "'1.1e1'");
-    // test.isException(function () {new Big(1.23).toFixed(true)}, "true");
-    // test.isException(function () {new Big(1.23).toFixed(false)}, "false");
-    // test.isException(function () {new Big(1.23).toFixed(function (){})}, "function (){}");
-    // test.isException(function () {new Big(1.23).toFixed(Big('3'))}, "Big('3')");
-    // test.isException(function () {new Big(1.23).toFixed('0')}, "'0'");
-    // test.isException(function () {new Big(1.23).toFixed('1')}, "'1'");
-    // test.isException(function () {new Big(1.23).toFixed('22')}, "'22'");
-    // test.isException(function () {new Big(1.23).toFixed('-0.00')}, "'-0.00'");
-    // test.isException(function () {new Big(1.23).toFixed('-1')}, "'-1'");
-    // test.isException(function () {new Big(1.23).toFixed(-23)}, "-23");
-    // test.isException(function () {new Big(1.23).toFixed(1e9 + 1)}, "1e9 + 1");
-    // test.isException(function () {new Big(1.23).toFixed(1e9 + 0.1)}, "1e9 + 1");
-    // test.isException(function () {new Big(1.23).toFixed('-0.01')}, "'-0.01'");
-    // test.isException(function () {new Big(1.23).toFixed('-1e-1')}, "'-1e-1'");
-    // test.isException(function () {new Big(1.23).toFixed(Infinity)}, "Infinity");
-    // test.isException(function () {new Big(1.23).toFixed('-Infinity')}, "'-Infinity'");
 
     // ROUND_UP
     Big.rm = RoundingMode.values[3];

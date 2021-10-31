@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 extension StringExtension on String {
   String operator -() {
     return '-$this';
@@ -27,6 +29,19 @@ void main() {
         reason: '$value.round($decimalPlaces, $roundingMode) = $expected',
       );
     }
+
+    checkException(
+      () {
+        Big('1.23').selfRound(-1000001);
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1.23').selfRound(1000001);
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     t('123.5', 123.45, 1, 3);
     t(-568, -'567.89', u, u);
@@ -8024,63 +8039,6 @@ void main() {
         '89952767699784490329238753106556088240055363.53282722660902952194444965738488338417066707293073436767917071691494767803882095044072221920119400608976324854',
         97,
         2);
-
-    // test.isException(function () {new Big('12.345').round(null)}, ".round(null)");
-    // test.isException(function () {new Big('12.345').round(NaN)}, ".round(NaN)");
-    // test.isException(function () {new Big('12.345').round('NaN')}, ".round('NaN')");
-    // test.isException(function () {new Big('12.345').round([])}, ".round([])");
-    // test.isException(function () {new Big('12.345').round({})}, ".round({})");
-    // test.isException(function () {new Big('12.345').round('')}, ".round('')");
-    // test.isException(function () {new Big('12.345').round(' ')}, ".round(' ')");
-    // test.isException(function () {new Big('12.345').round('hello')}, ".round('hello')");
-    // test.isException(function () {new Big('12.345').round('\t')}, ".round('\t')");
-    // test.isException(function () {new Big('12.345').round(new Date)}, ".round(new Date)");
-    // test.isException(function () {new Big('12.345').round(new RegExp)}, ".round(new RegExp)");
-    // test.isException(function () {new Big('12.345').round(function () {})}, ".round(function () {})");
-    // test.isException(function () {new Big('12.345').round(0.1)}, ".round(0.1)");
-    // test.isException(function () {new Big('12.345').round(7.5)}, ".round(7.5)");
-    // test.isException(function () {new Big('12.345').round('0')}, ".round('0')");
-    // test.isException(function () {new Big('12.345').round('1')}, ".round('1')");
-    // test.isException(function () {new Big('12.345').round('1.2')}, ".round('1.2')");
-    // test.isException(function () {new Big('12.345').round('99')}, ".round('99')");
-    // test.isException(function () {new Big('12.345').round('1.1e1')}, ".round('1.1e1')");
-    // test.isException(function () {new Big('12.345').round('-1')}, ".round('-1')");
-    // test.isException(function () {new Big('12.345').round(1e9 + 1)}, ".round(1e9 + 1)");
-    // test.isException(function () {new Big('12.345').round(1e9 + 0.1)}, ".round(1e9 + 1)");
-    // test.isException(function () {new Big('12.345').round('-0.01')}, ".round('-0.01')");
-    // test.isException(function () {new Big('12.345').round('-1e-1')}, ".round('-1e-1')");
-    // test.isException(function () {new Big('12.345').round(Infinity)}, ".round(Infinity)");
-    // test.isException(function () {new Big('12.345').round('-Infinity')}, ".round('-Infinity')");
-    // test.isException(function () {new Big('12.345').round(new Big('2'))}, ".round(new Big('2'))");
-
-    // test.isException(function () {new Big('12.345').round(u, null)}, ".round(u, null)");
-    // test.isException(function () {new Big('12.345').round(u, NaN)}, ".round(u, NaN)");
-    // test.isException(function () {new Big('12.345').round(u, 'NaN')}, ".round(u, 'NaN')");
-    // test.isException(function () {new Big('12.345').round(u, [])}, ".round(u, [])");
-    // test.isException(function () {new Big('12.345').round(u, {})}, ".round(u, {})");
-    // test.isException(function () {new Big('12.345').round(u, '')}, ".round(u, '')");
-    // test.isException(function () {new Big('12.345').round(u, ' ')}, ".round(u, ' ')");
-    // test.isException(function () {new Big('12.345').round(u, 'hello')}, ".round(u, 'hello')");
-    // test.isException(function () {new Big('12.345').round(u, '\t')}, ".round(u, '\t')");
-    // test.isException(function () {new Big('12.345').round(u, new Date)}, ".round(u, new Date)");
-    // test.isException(function () {new Big('12.345').round(u, function () {})}, ".round(u, function () {})");
-    // test.isException(function () {new Big('12.345').round(u, new RegExp)}, ".round(u, new RegExp)");
-    // test.isException(function () {new Big('12.345').round(u, 0.1)}, ".round(u, 0.1)");
-    // test.isException(function () {new Big('12.345').round(u, 7.5)}, ".round(u, 7.5)");
-    // test.isException(function () {new Big('12.345').round(u, '0')}, ".round(u, '0')");
-    // test.isException(function () {new Big('12.345').round(u, '1')}, ".round(u, '1')");
-    // test.isException(function () {new Big('12.345').round(u, '1.2')}, ".round(u, '1.2')");
-    // test.isException(function () {new Big('12.345').round(u, '99')}, ".round(u, '99')");
-    // test.isException(function () {new Big('12.345').round(u, '1.1e1')}, ".round(u, '1.1e1')");
-    // test.isException(function () {new Big('12.345').round(u, '-1')}, ".round('u, -1')");
-    // test.isException(function () {new Big('12.345').round(u, 8.01)}, ".round(u, 8.01)");
-    // test.isException(function () {new Big('12.345').round(u, 9)}, ".round(u, 9)");
-    // test.isException(function () {new Big('12.345').round(u, -1)}, ".round(u, -1)");
-    // test.isException(function () {new Big('12.345').round(u, '-0.01')}, ".round(u, '-0.01')");
-    // test.isException(function () {new Big('12.345').round(u, '-1e-1')}, ".round(u, '-1e-1')");
-    // test.isException(function () {new Big('12.345').round(u, Infinity)}, ".round(u, Infinity)");
-    // test.isException(function () {new Big('12.345').round(u, '-Infinity')}, ".round(u, '-Infinity')");
-    // test.isException(function () {new Big('12.345').round(u, new Big('2'))}, ".round(u, new Big('2'))");
 
     // Tests for rm 3, ROUND_UP, i.e. round away from zero.
     Big.rm = RoundingMode.values[3];

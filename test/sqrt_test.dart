@@ -19,6 +19,49 @@ void main() {
       );
     }
 
+    checkException(
+      () {
+        Big(-1).sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(-0.00000000001).sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('-0.00000000001').sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('-2.3').sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(-2.3).sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(-9.9e9).sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('-9.9e9').sqrt();
+      },
+      const TypeMatcher<BigError>(),
+    );
+
     Big.dp = 0;
     Big.rm = RoundingMode.values[1];
     t('1', 0.25);
@@ -859,15 +902,6 @@ void main() {
     Big.rm = RoundingMode.values[2];
     t('563619360203.007379904114453023253',
         '317666783195647379114879.695054964988341456801');
-
-    // test.isException(function () {Big(-1).sqrt()}, "-1");
-    // test.isException(function () {Big('-1').sqrt()}, "'-1'");
-    // test.isException(function () {Big(-0.00000000001).sqrt()}, "-0.00000000001");
-    // test.isException(function () {Big('-0.00000000001').sqrt()}, "'-0.00000000001'");
-    // test.isException(function () {Big(-2.3).sqrt()}, "-2.3");
-    // test.isException(function () {Big('-2.3').sqrt()}, "'-2.3'");
-    // test.isException(function () {Big(-9.9e9).sqrt()}, "-9.9e9");
-    // test.isException(function () {Big('-9.9e9').sqrt()}, "'-9.9e9'");
 
     // ROUND_UP
     Big.dp = 0;

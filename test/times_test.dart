@@ -10,6 +10,122 @@ void main() {
     Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
+
+    checkException(
+      () {
+        Big('1').times(Big(double.nan));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(''));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('hello'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('\t'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(' 0.1'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('7.5 '));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(' 0 '));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('+1'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(' +1.2'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('9.9.9'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('10.1.0'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('0x16'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('1e'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('8 e'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('77-e'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('123e.0'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big('4e1.'));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(double.infinity));
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big('1').times(Big(-double.infinity));
+      },
+      const TypeMatcher<BigError>(),
+    );
+
     t(multiplicand, multiplier, expected) {
       expect(Big(multiplicand).times(Big(multiplier)).toString(),
           expected.toString(),
@@ -5478,35 +5594,5 @@ void main() {
         '-1.06387569312217787644613114942E-25',
         '-3.49651047707433733724368394353972842316097364325909366154237667988339210449181953609691895611E35',
         '37198525073.064174722364904333744771229085129180022174384101305415837978911883846550330098510374779170577866567699408319562');
-
-    // test.isException(function () {Big('1').times(undefined)}, ".times(undefined)");
-    // test.isException(function () {Big('1').times(null)}, ".times(null)");
-    // test.isException(function () {Big('1').times(NaN)}, ".times(NaN)");
-    // test.isException(function () {Big('1').times('NaN')}, ".times('NaN')");
-    // test.isException(function () {Big('1').times([])}, ".times([])");
-    // test.isException(function () {Big('1').times({})}, ".times({})");
-    // test.isException(function () {Big('1').times('')}, ".times('')");
-    // test.isException(function () {Big('1').times(' ')}, ".times(' ')");
-    // test.isException(function () {Big('1').times('hello')}, ".times('hello')");
-    // test.isException(function () {Big('1').times('\t')}, ".times('\t')");
-    // test.isException(function () {Big('1').times(Date)}, ".times(new Date)");
-    // test.isException(function () {Big('1').times(RegExp)}, ".times(new RegExp)");
-    // test.isException(function () {Big('1').times(function () {})}, ".times(function () {})");
-    // test.isException(function () {Big('1').times(' 0.1')}, ".times(' 0.1')");
-    // test.isException(function () {Big('1').times('7.5 ')}, ".times('7.5 ')");
-    // test.isException(function () {Big('1').times(' 0 ')}, ".times(' 0 ')");
-    // test.isException(function () {Big('1').times('+1')}, ".times('+1')");
-    // test.isException(function () {Big('1').times(' +1.2')}, ".times(' +1.2')");
-    // test.isException(function () {Big('1').times('- 99')}, ".times('- 99')");
-    // test.isException(function () {Big('1').times('9.9.9')}, ".times('9.9.9')");
-    // test.isException(function () {Big('1').times('10.1.0')}, ".times('10.1.0')");
-    // test.isException(function () {Big('1').times('0x16')}, ".times('0x16')");
-    // test.isException(function () {Big('1').times('1e')}, ".times('1e')");
-    // test.isException(function () {Big('1').times('8 e')}, ".times('8 e')");
-    // test.isException(function () {Big('1').times('77-e')}, ".times('77-e')");
-    // test.isException(function () {Big('1').times('123e.0')}, ".times('123e.0')");
-    // test.isException(function () {Big('1').times('4e1.')}, ".times('4e1.')");
-    // test.isException(function () {Big('1').times(Infinity)}, ".times(Infinity)");
-    // test.isException(function () {Big('1').times('-Infinity')}, ".times('-Infinity')");
   });
 }

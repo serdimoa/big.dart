@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('toExponential', () {
     // To default
@@ -9,6 +11,14 @@ void main() {
     Big.rm = RoundingMode.values[1];
     Big.ne = -7;
     Big.pe = 21;
+
+    checkException(
+      () {
+        Big(1.23).toExponential(dp: 1e7.toInt());
+      },
+      const TypeMatcher<BigError>(),
+    );
+
     t(expected, value, [int? decimalPlaces]) {
       expect(
         Big(value).toExponential(dp: decimalPlaces),
@@ -562,37 +572,6 @@ void main() {
     );
     t('1e+2', '12.3e1', 0);
     t('1e+2', '12.3e1', -0);
-
-    // test.isException(function () {new Big(1.23).toExponential(null)}, "null");
-    // test.isException(function () {new Big(1.23).toExponential(NaN)}, "NaN");
-    // test.isException(function () {new Big(1.23).toExponential('NaN')}, "'NaN'");
-    // test.isException(function () {new Big(1.23).toExponential([])}, "[]");
-    // test.isException(function () {new Big(1.23).toExponential({})}, "{}");
-    // test.isException(function () {new Big(1.23).toExponential('')}, "''");
-    // test.isException(function () {new Big(1.23).toExponential(' ')}, "' '");
-    // test.isException(function () {new Big(1.23).toExponential('hello')}, "'hello'");
-    // test.isException(function () {new Big(1.23).toExponential('\t')}, "'\t'");
-    // test.isException(function () {new Big(1.23).toExponential(new Date)}, "new Date");
-    // test.isException(function () {new Big(1.23).toExponential(new RegExp)}, "new RegExp");
-    // test.isException(function () {new Big(1.23).toExponential(2.01)}, "2.01");
-    // test.isException(function () {new Big(1.23).toExponential(10.5)}, "10.5");
-    // test.isException(function () {new Big(1.23).toExponential('1.1e1')}, "'1.1e1'");
-    // test.isException(function () {new Big(1.23).toExponential(true)}, "true");
-    // test.isException(function () {new Big(1.23).toExponential(false)}, "false");
-    // test.isException(function () {new Big(1.23).toExponential(function (){})}, "function (){}");
-    // test.isException(function () {new Big(1.23).toExponential(Big('3'))}, "Big('3')");
-    // test.isException(function () {new Big(1.23).toExponential('0')}, "'0'");
-    // test.isException(function () {new Big(1.23).toExponential('1')}, "'1'");
-    // test.isException(function () {new Big(1.23).toExponential('22')}, "'22'");
-    // test.isException(function () {new Big(1.23).toExponential('-0.00')}, "'-0.00'");
-    // test.isException(function () {new Big(1.23).toExponential('-1')}, "'-1'");
-    // test.isException(function () {new Big(1.23).toExponential(-23)}, "-23");
-    // test.isException(function () {new Big(1.23).toExponential(1e9 + 1)}, "1e9 + 1");
-    // test.isException(function () {new Big(1.23).toExponential(1e9 + 0.1)}, "1e9 + 0.1");
-    // test.isException(function () {new Big(1.23).toExponential(-0.01)}, "-0.01");
-    // test.isException(function () {new Big(1.23).toExponential('-1e-1')}, "'-1e-1'");
-    // test.isException(function () {new Big(1.23).toExponential(Infinity)}, "Infinity");
-    // test.isException(function () {new Big(1.23).toExponential('-Infinity')}, "'-Infinity'");
 
     // ROUND_UP
     Big.rm = RoundingMode.values[3];

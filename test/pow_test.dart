@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('pow', () {
     int maxPower = 1e6.toInt();
@@ -1315,43 +1317,18 @@ void main() {
     t('0', '-8645', -30);
     t('0', '7.24173993', -23);
 
-    // test.isException(function () {new Big(9).pow(undefined)}, ".pow(undefined)");
-    // test.isException(function () {new Big(9).pow(null)}, ".pow(null)");
-    // test.isException(function () {new Big(9).pow(NaN)}, ".pow(NaN)");
-    // test.isException(function () {new Big(9).pow('NaN')}, ".pow('NaN')");
-    // test.isException(function () {new Big(9).pow([])}, ".pow([])");
-    // test.isException(function () {new Big(9).pow({})}, ".pow({})");
-    // test.isException(function () {new Big(9).pow('')}, ".pow('')");
-    // test.isException(function () {Big(9).pow(' ')}, ".pow(' ')");
-    // test.isException(function () {new Big(9).pow('hello')}, ".pow('hello')");
-    // test.isException(function () {new Big(9).pow('\t')}, ".pow('\t')");
-    // test.isException(function () {new Big(9).pow(new Date)}, ".pow(new Date)");
-    // test.isException(function () {new Big(9).pow(new RegExp)}, ".pow(new RegExp)");
-    // test.isException(function () {new Big(9).pow(function () {})}, ".pow(function () {})");
-    // test.isException(function () {new Big(9).pow(-23.000001)}, ".pow(-23.000001)");
-    // test.isException(function () {new Big(9).pow(MAX_POWER + 0.02)}, ".pow(MAX_POWER + 0.02)");
-    // test.isException(function () {new Big(9).pow(MAX_POWER + 1)}, ".pow(MAX_POWER + 1)");
-    // test.isException(function () {new Big(9).pow(-MAX_POWER - 0.3)}, ".pow(-MAX_POWER - 0.3)");
-    // test.isException(function () {new Big(9).pow(-MAX_POWER - 1)}, ".pow(-MAX_POWER - 1)");
-    // test.isException(function () {new Big(9).pow(' 0.1')}, ".pow(' 0.1')");
-    // test.isException(function () {new Big(9).pow('7.5 ')}, ".pow('7.5 ')");
-    // test.isException(function () {Big(9).pow(' 0 ')}, ".pow(' 0 ')");
-    // test.isException(function () {new Big(9).pow('+1')}, ".pow('+1')");
-    // test.isException(function () {new Big(9).pow(' +1.2')}, ".pow(' +1.2')");
-    // test.isException(function () {new Big(9).pow('- 99')}, ".pow('- 99')");
-    // test.isException(function () {new Big(9).pow('9.9.9')}, ".pow('9.9.9')");
-    // test.isException(function () {new Big(9).pow('10.1.0')}, ".pow('10.1.0')");
-    // test.isException(function () {new Big(9).pow('234.')}, ".pow('234.')");
-    // test.isException(function () {new Big(9).pow('.5')}, ".pow('.5')");
-    // test.isException(function () {new Big(9).pow('0x16')}, ".pow('0x16')");
-    // test.isException(function () {new Big(9).pow('1e')}, ".pow('1e')");
-    // test.isException(function () {new Big(9).pow('8 e')}, ".pow('8 e')");
-    // test.isException(function () {new Big(9).pow('77-e')}, ".pow('77-e')");
-    // test.isException(function () {new Big(9).pow('123e.0')}, ".pow('123e.0')");
-    // test.isException(function () {new Big(9).pow('4e1.')}, ".pow('4e1.')");
-    // test.isException(function () {Big(9).pow(Infinity)}, ".pow(Infinity)");
-    // test.isException(function () {new Big(9).pow('-Infinity')}, ".pow('-Infinity')");
-
+    checkException(
+      () {
+        Big(9).pow(maxPower + 1);
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(9).pow(-maxPower - 1);
+      },
+      const TypeMatcher<BigError>(),
+    );
     // ROUND_UP
 
     Big.dp = 38;

@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('toPrecision', () {
     t(expected, value, [int? precision]) {
@@ -473,38 +475,12 @@ void main() {
     t('-3.56e+4', '-35566.4678487', 3);
     t('123.45', '12.345e1');
 
-    // test.isException(function () {new Big(1.23).toPrecision(null)}, "null");
-    // test.isException(function () {new Big(1.23).toPrecision(NaN)}, "NaN");
-    // test.isException(function () {new Big(1.23).toPrecision('NaN')}, "'NaN'");
-    // test.isException(function () {new Big(1.23).toPrecision([])}, "[]");
-    // test.isException(function () {new Big(1.23).toPrecision({})}, "{}");
-    // test.isException(function () {new Big(1.23).toPrecision('')}, "''");
-    // test.isException(function () {new Big(1.23).toPrecision(' ')}, "' '");
-    // test.isException(function () {new Big(1.23).toPrecision('hello')}, "'hello'");
-    // test.isException(function () {new Big(1.23).toPrecision('\t')}, "'\t'");
-    // test.isException(function () {new Big(1.23).toPrecision(new Date)}, "new Date");
-    // test.isException(function () {new Big(1.23).toPrecision(new RegExp)}, "new RegExp");
-    // test.isException(function () {new Big(1.23).toPrecision(2.01)}, "2.01");
-    // test.isException(function () {new Big(1.23).toPrecision(10.5)}, "10.5");
-    // test.isException(function () {new Big(1.23).toPrecision('1.1e1')}, "'1.1e1'");
-    // test.isException(function () {new Big(1.23).toPrecision(true)}, "true");
-    // test.isException(function () {new Big(1.23).toPrecision(false)}, "false");
-    // test.isException(function () {new Big(1.23).toPrecision(function (){})}, "function (){}");
-    // test.isException(function () {new Big(1.23).toPrecision(Big('3'))}, "Big('3')");
-    // test.isException(function () {new Big(1.23).toPrecision('0')}, "'0'");
-    // test.isException(function () {new Big(1.23).toPrecision('1')}, "'1'");
-    // test.isException(function () {new Big(1.23).toPrecision('22')}, "'22'");
-    // test.isException(function () {new Big(1.23).toPrecision('-0.00')}, "'-0.00'");
-    // test.isException(function () {new Big(1.23).toPrecision('-1')}, "'-1'");
-    // test.isException(function () {new Big(1.23).toPrecision(-23)}, "-23");
-    // test.isException(function () {new Big(1.23).toPrecision(1e9 + 1)}, "1e9 + 1");
-    // test.isException(function () {new Big(1.23).toPrecision(1e9 + 0.1)}, "1e9 + 0.1");
-    // test.isException(function () {new Big(1.23).toPrecision(0)}, "0");
-    // test.isException(function () {new Big(1.23).toPrecision('-0')}, "'-0'");
-    // test.isException(function () {new Big(1.23).toPrecision(0.9)}, "0.9");
-    // test.isException(function () {new Big(1.23).toPrecision('-1e-1')}, "'-1e-1'");
-    // test.isException(function () {new Big(1.23).toPrecision(Infinity)}, "Infinity");
-    // test.isException(function () {new Big(1.23).toPrecision('-Infinity')}, "'-Infinity'");
+    checkException(
+      () {
+        Big(1.23).toPrecision((1e9).toInt());
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     // ROUND_UP
     Big.rm = RoundingMode.values[3];

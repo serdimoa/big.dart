@@ -13,10 +13,21 @@ void main() {
       Big.pe = 21;
     });
 
-    test('First Test', () {
-      var x = 45.6;
-      var y = Big(x);
-      expect(y.toFixed(dp: 3), '45.600');
+    test('Value of', () {
+      Big.strict = true;
+      var y = Big('-0');
+      expect(
+        () {
+          y.valueOf();
+        },
+        throwsA(const TypeMatcher<BigError>()),
+      );
+
+      Big.strict = false;
+      expect(
+        y.valueOf(),
+        '-0',
+      );
     });
     test('toExponential', () {
       var x = 45.6;

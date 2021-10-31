@@ -11,20 +11,9 @@ bool isBigZero(Big? n) {
       (n.s == 1 || n.s == -1);
 }
 
-// test.isException = function (func, msg) {
-//   var actual;
-//   ++count;
-//   try {
-//     func();
-//   } catch (e) {
-//     actual = e;
-//   }
-//   if (actual instanceof Error && /\[big\.js\]/.test(actual.message)) {
-//     ++passed;
-//   } else {
-//     fail(count, (msg + ' to raise an fail.'), (actual || 'no exception'));
-//   }
-// };
+checkException(func, ex) {
+  expect(func, throwsA(ex));
+}
 
 void isNegativeZero(Big actual) {
   expect(isBigZero(actual) && actual.s == -1, true,

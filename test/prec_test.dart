@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('prec', () {
     // To default
@@ -648,9 +650,23 @@ void main() {
     t('3.9748340091494161936502395814742749549562853206914631e+3139',
         '3.97483400914941619365023958147427495495628532069146310E+3139', 55, 1);
 
-    // test.isException(function () {new Big(0).prec(0)}, "new Big(0).prec(0)");
-    // test.isException(function () {new Big(1).prec(0)}, "new Big(1).prec(0)");
-    // test.isException(function () {new Big(1).prec()}, "new Big(1).prec()");
-    // test.isException(function () {new Big(1).prec(-1)}, "new Big(1).prec(-1)");
+    checkException(
+      () {
+        Big(0).prec(0);
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(1).prec(0);
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(1).prec(-1);
+      },
+      const TypeMatcher<BigError>(),
+    );
   });
 }

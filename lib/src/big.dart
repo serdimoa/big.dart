@@ -134,7 +134,7 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// rm? [RoundingMode] Rounding mode.
   Big prec(int sd, [RoundingMode? _rm]) {
     if (sd != ~~sd || sd < 1 || sd > maxDp) {
-      throw BigError(description: invalid + 'precision', code: BigErrorCode.dp);
+      throw BigError(code: BigErrorCode.dp);
     }
     return round(
       Big(this),
@@ -153,7 +153,6 @@ class Big extends Comparable<Big> with EquatableMixin {
       if (n is! String) {
         if (Big.strict == true) {
           throw BigError(
-            description: invalid + 'number',
             code: BigErrorCode.type,
           );
         }
@@ -179,7 +178,6 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     if (!_numeric.hasMatch(n)) {
       throw BigError(
-        description: invalid + 'number',
         code: BigErrorCode.type,
       );
     }
@@ -248,8 +246,7 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     // Negative?
     if (s < 0) {
-      throw BigError(
-          description: name + 'No square root', code: BigErrorCode.sqrt);
+      throw BigError(code: BigErrorCode.sqrt);
     }
 
     // Estimate.
@@ -346,13 +343,11 @@ class Big extends Comparable<Big> with EquatableMixin {
         k = x.s == y.s ? 1 : -1,
         dp = Big.dp;
 
-    if (dp != ~~dp || dp < 0 || dp > maxDp) {
-      throw BigError(code: BigErrorCode.dp, description: invalidDp);
-    }
-
     // Divisor is zero?
     if (!b.numberAtLikeJsTest(0)) {
-      throw BigError(code: BigErrorCode.divByZero, description: divByZero);
+      throw BigError(
+        code: BigErrorCode.divByZero,
+      );
     }
 
     // Dividend is 0? Return +-0.
@@ -609,7 +604,9 @@ class Big extends Comparable<Big> with EquatableMixin {
     var x = this, a = x.s, b = y.s;
 
     if (!y.c.numberAtLikeJsTest(0)) {
-      throw BigError(code: BigErrorCode.divByZero, description: divByZero);
+      throw BigError(
+        code: BigErrorCode.divByZero,
+      );
     }
 
     x.s = y.s = 1;
@@ -711,11 +708,12 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// mode [Big.rm].
   /// n [int] Integer, -[maxPower] to [maxPower] inclusive.
   Big pow(int n) {
-    var x = this, one = Big('1'), y = one, isNegative = n < 0;
-
     if (n != ~~n || n < -maxPower || n > maxPower) {
-      throw BigError(code: BigErrorCode.pow, description: invalid + 'exponent');
+      throw BigError(
+        code: BigErrorCode.pow,
+      );
     }
+    var x = this, one = Big('1'), y = one, isNegative = n < 0;
 
     if (isNegative) n = -n;
 
@@ -809,7 +807,9 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     if (dp != null) {
       if (dp != ~~dp || dp < 0 || dp > maxDp) {
-        throw BigError(code: BigErrorCode.dp, description: invalidDp);
+        throw BigError(
+          code: BigErrorCode.dp,
+        );
       }
       x = round(Big(x), ++dp, rm);
       for (; x.c.length < dp;) {
@@ -834,7 +834,9 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     if (dp != null) {
       if (dp != ~~dp || dp < 0 || dp > maxDp) {
-        throw BigError(code: BigErrorCode.dp, description: invalidDp);
+        throw BigError(
+          code: BigErrorCode.dp,
+        );
       }
       x = round(Big(x), dp + x.e + 1, rm);
 
@@ -863,7 +865,6 @@ class Big extends Comparable<Big> with EquatableMixin {
     var n = double.parse(stringify(this, true, true));
     if (strict == true && !eq(Big(n.toString()))) {
       throw BigError(
-        description: name + 'Imprecise conversion',
         code: BigErrorCode.type,
       );
     }
@@ -882,7 +883,6 @@ class Big extends Comparable<Big> with EquatableMixin {
     if (sd != null) {
       if (sd != ~~sd || sd < 1 || sd > maxDp) {
         throw BigError(
-          description: invalid + 'precision',
           code: BigErrorCode.sd,
         );
       }
@@ -901,14 +901,13 @@ class Big extends Comparable<Big> with EquatableMixin {
 
   /// Return a string representing the value of this Big.
   /// Return exponential notation if this Big has a positive exponent equal to or greater than
-  /// Big.PE, or a negative exponent equal to or less than Big.NE.
+  /// [Big.pe], or a negative exponent equal to or less than [Big.ne].
   /// Include the sign for negative zero.
   String valueOf() {
     var x = this;
 
     if (Big.strict == true) {
       throw BigError(
-        description: name + 'valueOf disallowed',
         code: BigErrorCode.type,
       );
     }
@@ -922,7 +921,9 @@ class Big extends Comparable<Big> with EquatableMixin {
     if (dp == null) {
       dp = 0;
     } else if (dp != ~~dp || dp < -maxDp || dp > maxDp) {
-      throw BigError(code: BigErrorCode.dp, description: invalidDp);
+      throw BigError(
+        code: BigErrorCode.dp,
+      );
     }
     return round(
       Big(this),

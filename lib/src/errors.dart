@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum BigErrorCode {
   type,
   nan,
@@ -10,8 +12,7 @@ enum BigErrorCode {
   sd,
 }
 
-class BigError extends Error {
+class BigError implements Exception {
   final BigErrorCode code;
-  final String? description;
-  BigError({required this.code, this.description});
+  BigError({required this.code});
 }

@@ -2,6 +2,8 @@ import 'package:big/big.dart';
 
 import 'package:test/test.dart';
 
+import '_utils.dart';
+
 void main() {
   test('toNumber', () {
     Function t;
@@ -87,13 +89,25 @@ void main() {
     t(n, 1);
 
     Big.strict = true;
+    checkException(
+      () {
+        Big(n).toNumber();
+      },
+      const TypeMatcher<BigError>(),
+    );
 
-    // test.isException(function () {new Big(n).toNumber()}, "new Big(n).toNumber()");
-
-    // test.isException(function () {new Big(0).toNumber()}, "new Big(0).toNumber()");
-    // test.isException(function () {new Big(Big.zero(isNegative: true)).toNumber()}, "new Big(Big.zero(isNegative: true)).toNumber()");
-    // test.isException(function () {new Big(1).toNumber()}, "new Big(1).toNumber()");
-    // test.isException(function () {new Big(-1).toNumber()}, "new Big(-1).toNumber()");
+    checkException(
+      () {
+        Big(1).toNumber();
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(-1).toNumber();
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     t('0', 0);
     t('-0', -0);

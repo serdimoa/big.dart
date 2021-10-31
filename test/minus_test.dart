@@ -4433,35 +4433,5 @@ void main() {
         '383136705689331496.7267527667448567');
     t('-2.56218040669566121e+12', '1.83637202203675e+8',
         '-2562364043897.864885');
-
-    // test.isException(function () {new Big('12.345').minus(undefined)}, ".minus(undefined)");
-    // test.isException(function () {new Big('12.345').minus(null)}, ".minus(null)");
-    // test.isException(function () {new Big('12.345').minus(NaN)}, ".minus(NaN)");
-    // test.isException(function () {new Big('12.345').minus('NaN')}, ".minus('NaN')");
-    // test.isException(function () {new Big('12.345').minus([])}, ".minus([])");
-    // test.isException(function () {new Big('12.345').minus({})}, ".minus({})");
-    // test.isException(function () {new Big('12.345').minus('')}, ".minus('')");
-    // test.isException(function () {Big('12.345').minus(' ')}, ".minus(' ')");
-    // test.isException(function () {new Big('12.345').minus('hello')}, ".minus('hello')");
-    // test.isException(function () {new Big('12.345').minus('\t')}, ".minus('\t')");
-    // test.isException(function () {new Big('12.345').minus(new Date)}, ".minus(new Date)");
-    // test.isException(function () {new Big('12.345').minus(new RegExp)}, ".minus(new RegExp)");
-    // test.isException(function () {new Big('12.345').minus(function () {})}, ".minus(function () {})");
-    // test.isException(function () {new Big('12.345').minus(' 0.1')}, ".minus(' 0.1')");
-    // test.isException(function () {new Big('12.345').minus('7.5 ')}, ".minus('7.5 ')");
-    // test.isException(function () {Big('12.345').minus(' 0 ')}, ".minus(' 0 ')");
-    // test.isException(function () {new Big('12.345').minus('+1')}, ".minus('+1')");
-    // test.isException(function () {new Big('12.345').minus(' +1.2')}, ".minus(' +1.2')");
-    // test.isException(function () {new Big('12.345').minus('- 99')}, ".minus('- 99')");
-    // test.isException(function () {new Big('12.345').minus('9.9.9')}, ".minus('9.9.9')");
-    // test.isException(function () {new Big('12.345').minus('10.1.0')}, ".minus('10.1.0')");
-    // test.isException(function () {new Big('12.345').minus('0x16')}, ".minus('0x16')");
-    // test.isException(function () {new Big('12.345').minus('1e')}, ".minus('1e')");
-    // test.isException(function () {new Big('12.345').minus('8 e')}, ".minus('8 e')");
-    // test.isException(function () {new Big('12.345').minus('77-e')}, ".minus('77-e')");
-    // test.isException(function () {new Big('12.345').minus('123e.0')}, ".minus('123e.0')");
-    // test.isException(function () {new Big('12.345').minus('4e1.')}, ".minus('4e1.')");
-    // test.isException(function () {Big('12.345').minus(Infinity)}, ".minus(Infinity)");
-    // test.isException(function () {new Big('12.345').minus('-Infinity')}, ".minus('-Infinity')");
   });
 }

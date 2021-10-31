@@ -14,13 +14,19 @@ void main() {
 
   test('div test with multiple dp and rm', () {
     // To default
-    Big.dp = 20;
-    Big.rm = RoundingMode.values[1];
+
     Big.ne = -7;
     Big.pe = 21;
 
     Big.dp = 40;
     Big.rm = RoundingMode.values[1];
+
+    checkException(
+      () {
+        Big(9).div(Big.zero());
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     isPositiveZero((Big.zero().div(1.toBig)));
     isNegativeZero((Big.zero().div((-1).toBig)));
@@ -17203,240 +17209,18 @@ void main() {
     // Invalid 'Big.dp's
     Big.rm = RoundingMode.values[0];
 
-    // test.isException(function () { Big.dp = undefined; e(4, 2, 2) }, "Big.dp = undefined");
-    // Big.dp = 2;
-    // e('2.71', '1.151', '2.35');
-    // test.isException(function () { Big.dp = null; e(4, 2, 2) }, "Big.dp = null");
-    // Big.dp = 2;
-    // e('-0.01071', '0.00151', '-7.09');
-    // test.isException(function () { Big.dp = NaN; e(4, 2, 2) }, "Big.dp = NaN");
-    // Big.dp = 2;
-    // e('-0.0001271', '61', '0');
-    // test.isException(function () { Big.dp = 'NaN'; e(4, 2, 2) }, "Big.dp = 'NaN'");
-    // Big.dp = 2;
-    // e('-161', '-0.00000391', '41176470.58');
-    // test.isException(function () { Big.dp = []; e(4, 2, 2) }, "Big.dp = []");
-    // Big.dp = 2;
-    // e('61', '1.921', '31.75');
-    // test.isException(function () { Big.dp = {}; e(4, 2, 2) }, "Big.dp = {}");
-    // Big.dp = 2;
-    // e('-1.71', '71', '-0.02');
-    // test.isException(function () { Big.dp = ''; e(4, 2, 2) }, "Big.dp = ''");
-    // Big.dp = 2;
-    // e('1', '-81', '-0.01');
-    // test.isException(function () { Big.dp = ' '; e(4, 2, 2) }, "Big.dp = ' '");
-    // Big.dp = 2;
-    // e('-61', '31', '-1.96');
-    // test.isException(function () { Big.dp = 'hello'; e(4, 2, 2) }, "Big.dp = 'hello'");
-    // Big.dp = 2;
-    // e('-2.21', '-81', '0.02');
-    // test.isException(function () { Big.dp = '\t'; e(4, 2, 2) }, "Big.dp = '\t'");
-    // Big.dp = 2;
-    // e('21', '-2.51', '-8.36');
-    // test.isException(function () { Big.dp = Date; e(4, 2, 2) }, "Big.dp = new Date");
-    // Big.dp = 2;
-    // e('0.0000000541', '131', '0');
-    // test.isException(function () { Big.dp = RegExp; e(4, 2, 2) }, "Big.dp = new RegExp");
-    // Big.dp = 2;
-    // e('-11', '-22.41', '0.49');
-    // test.isException(function () { Big.dp = function () {}; e(4, 2, 2) }, "Big.dp = function () {} ");
-    // Big.dp = 2;
-    // e('1.51', '-21', '-0.07');
-    // test.isException(function () { Big.dp = -1; e(4, 2, 2) }, "Big.dp = -1");
-    // Big.dp = 2;
-    // e('2.71', '0.0000151', '179470.19');
-    // test.isException(function () { Big.dp = 1.5; e(4, 2, 2) }, "Big.dp = 1.5");
-    // Big.dp = 2;
-    // e('11', '-1.21', '-9.09');
-    // test.isException(function () { Big.dp = 7.5; e(4, 2, 2) }, "Big.dp = 7.5");
-    // Big.dp = 2;
-    // e('10', '10', '1');
-    // test.isException(function () { Big.dp = 0.1; e(4, 2, 2) }, "Big.dp = 0.1");
-    // Big.dp = 2;
-    // e('-1.51', '1', '-1.51');
-    // test.isException(function () { Big.dp = '0'; e(4, 2, 2) }, "Big.dp = '0'");
-    // Big.dp = 2;
-    // e('51', '-11', '-4.63');
-    // test.isException(function () { Big.dp = '1'; e(4, 2, 2) }, "Big.dp = '1'");
-    // Big.dp = 2;
-    // e('-0.0261', '-0.0181', '1.44');
-    // test.isException(function () { Big.dp = '1.2'; e(4, 2, 2) }, "Big.dp = '1.2'");
-    // Big.dp = 2;
-    // e('23.31', '-1', '-23.31');
-    // test.isException(function () { Big.dp = '99'; e(4, 2, 2) }, "Big.dp = '99'");
-    // Big.dp = 2;
-    // e('131', '25.41', '5.15');
-    // test.isException(function () { Big.dp = '-1'; e(4, 2, 2) }, "Big.dp = '-1'");
-    // Big.dp = 2;
-    // e('6.91', '21', '0.32');
-    // test.isException(function () { Big.dp = -23; e(4, 2, 2) }, "Big.dp = -23");
-    // Big.dp = 2;
-    // e('-3.51', '-141', '0.02');
-    // test.isException(function () { Big.dp = 1e9 + 1; e(4, 2, 2) }, "Big.dp = 1e9 + 1");
-    // Big.dp = 2;
-    // e('1', '11', '0.09');
-    // test.isException(function () { Big.dp = 1e+99; e(4, 2, 2) }, "Big.dp = 1e+99");
-    // Big.dp = 2;
-    // e('-0.00000151', '-5.61', '0');
-    // test.isException(function () { Big.dp = '-0.01'; e(4, 2, 2) }, "Big.dp = '-0.01'");
-    // Big.dp = 2;
-    // e('0.00261', '13.91', '0');
-    // test.isException(function () { Big.dp = '-1e-1'; e(4, 2, 2) }, "Big.dp = '-1e-1'");
-    // Big.dp = 2;
-    // e('-1', '1', '-1');
-    // test.isException(function () { Big.dp = Infinity; e(4, 2, 2) }, "Big.dp = Infinity");
-    // Big.dp = 2;
-    // e('-1', '-111', '0');
-    // test.isException(function () { Big.dp = '-Infinity'; e(4, 2, 2) }, "Big.dp = '-Infinity'");
-    // Big.dp = 2;
-    // e('-11', '-11', '1');
-    // test.isException(function () { Big.dp = Big('2'); e(4, 2, 2) }, "Big.dp = new Big('2')");
-    // Big.dp = 2;
-    // e('1', '10.41', '0.09');
-
-    // // Invalid 'Big.rm's
-    // test.isException(function () { Big.rm = undefined; e(1, 3, 0.3) }, "Big.rm = undefined");
-    // Big.rm = RoundingMode.values[0];
-    // e('1', '21', '0.04');
-    // test.isException(function () { Big.rm = null; e(1, 3, 0.3) }, "Big.rm = null");
-    // Big.rm = RoundingMode.values[0];
-    // e('1.31', '-1.001', '-1.3');
-    // test.isException(function () { Big.rm = NaN; e(1, 3, 0.3) }, "Big.rm = NaN");
-    // Big.rm = RoundingMode.values[0];
-    // e('-31', '2.81', '-11.03');
-    // test.isException(function () { Big.rm = 'NaN'; e(1, 3, 0.3) }, "Big.rm = 'NaN'");
-    // Big.rm = RoundingMode.values[0];
-    // e('25.31', '-0.00000551', '-4593466.42');
-    // test.isException(function () { Big.rm = []; e(1, 3, 0.3) }, "Big.rm = []");
-    // Big.rm = RoundingMode.values[0];
-    // e('131', '61', '2.14');
-    // test.isException(function () { Big.rm = {}; e(1, 3, 0.3) }, "Big.rm = {}");
-    // Big.rm = RoundingMode.values[0];
-    // e('0.0000271', '1.51', '0');
-    // test.isException(function () { Big.rm = ''; e(1, 3, 0.3) }, "Big.rm = ''");
-    // Big.rm = RoundingMode.values[0];
-    // e('1.81', '91', '0.01');
-    // test.isException(function () { Big.rm = ' '; e(1, 3, 0.3) }, "Big.rm = ' '");
-    // Big.rm = RoundingMode.values[0];
-    // e('-31', '1', '-31');
-    // test.isException(function () { Big.rm = 'hello'; e(1, 3, 0.3) }, "Big.rm = 'hello'");
-    // Big.rm = RoundingMode.values[0];
-    // e('601', '-31', '-19.38');
-    // test.isException(function () { Big.rm = '\t'; e(1, 3, 0.3) }, "Big.rm = '\t'");
-    // Big.rm = RoundingMode.values[0];
-    // e('41', '-1', '-41');
-    // test.isException(function () { Big.rm = Date; e(1, 3, 0.3) }, "Big.rm = new Date");
-    // Big.rm = RoundingMode.values[0];
-    // e('1', '-11', '-0.09');
-    // test.isException(function () { Big.rm = RegExp; e(1, 3, 0.3) }, "Big.rm = new RegExp");
-    // Big.rm = RoundingMode.values[0];
-    // e('31', '-1.51', '-20.52');
-    // test.isException(function () { Big.rm = function () {}; e(1, 3, 0.3) }, "Big.rm = function () {} ");
-    // Big.rm = RoundingMode.values[0];
-    // e('-81', '-301', '0.26');
-    // test.isException(function () { Big.rm = -1; e(1, 3, 0.3) }, "Big.rm = -1");
-    // Big.rm = RoundingMode.values[0];
-    // e('1', '71', '0.01');
-    // test.isException(function () { Big.rm = 3.1; e(1, 3, 0.3) }, "Big.rm = 3.1");
-    // Big.rm = RoundingMode.values[0];
-    // e('1', '1061', '0');
-    // test.isException(function () { Big.rm = 1.5; e(1, 3, 0.3) }, "Big.rm = 1.5");
-    // Big.rm = RoundingMode.values[0];
-    // e('-11', '-1', '11');
-    // test.isException(function () { Big.rm = 0.1; e(1, 3, 0.3) }, "Big.rm = 0.1");
-    // Big.rm = RoundingMode.values[0];
-    // e('-1.91', '-0.0001331', '14350.11');
-    // test.isException(function () { Big.rm = 7.5; e(1, 3, 0.3) }, "Big.rm = 7.5");
-    // Big.rm = RoundingMode.values[0];
-    // e('-1.11', '0.291', '-3.81');
-    // test.isException(function () { Big.rm = '0'; e(1, 3, 0.3) }, "Big.rm = '0'");
-    // Big.rm = RoundingMode.values[0];
-    // e('-1', '2.21', '-0.45');
-    // test.isException(function () { Big.rm = '1'; e(1, 3, 0.3) }, "Big.rm = '1'");
-    // Big.rm = RoundingMode.values[0];
-    // e('1.321', '1.01', '1.3');
-    // test.isException(function () { Big.rm = '1.2'; e(1, 3, 0.3) }, "Big.rm = '1.2'");
-    // Big.rm = RoundingMode.values[0];
-    // e('1', '-1.01', '-0.99');
-    // test.isException(function () { Big.rm = '99'; e(1, 3, 0.3) }, "Big.rm = '99'");
-    // Big.rm = RoundingMode.values[0];
-    // e('11', '1', '11');
-    // test.isException(function () { Big.rm = '1.1e1'; e(1, 3, 0.3) }, "Big.rm = '1.1e1'");
-    // Big.rm = RoundingMode.values[0];
-    // e('-81', '8.91', '-9.09');
-    // test.isException(function () { Big.rm = '-1'; e(1, 3, 0.3) }, "Big.rm = '-1'");
-    // Big.rm = RoundingMode.values[0];
-    // e('-21', '21', '-1');
-    // test.isException(function () { Big.rm = -23; e(1, 3, 0.3) }, "Big.rm = -23");
-    // Big.rm = RoundingMode.values[0];
-    // e('8.31', '-21', '-0.39');
-    // test.isException(function () { Big.rm = 1e9; e(1, 3, 0.3) }, "Big.rm = 1e9 + 1");
-    // Big.rm = RoundingMode.values[0];
-    // e('1.31', '11', '0.11');
-    // test.isException(function () { Big.rm = 1e9; e(1, 3, 0.3) }, "Big.rm = 1e9 + 1");
-    // Big.rm = RoundingMode.values[0];
-    // e('11', '-61', '-0.18');
-    // test.isException(function () { Big.rm = '-0.01'; e(1, 3, 0.3) }, "Big.rm = '-0.01'");
-    // Big.rm = RoundingMode.values[0];
-    // e('7.71', '-31', '-0.24');
-    // test.isException(function () { Big.rm = '-1e-1'; e(1, 3, 0.3) }, "Big.rm = '-1e-1'");
-    // Big.rm = RoundingMode.values[0];
-    // e('0.321', '-51', '0');
-    // test.isException(function () { Big.rm = Infinity; e(1, 3, 0.3) }, "Big.rm = Infinity");
-    // Big.rm = RoundingMode.values[0];
-    // e('0.00111', '-11', '0');
-    // test.isException(function () { Big.rm = '-Infinity'; e(1, 3, 0.3) }, "Big.rm = '-Infinity'");
-    // Big.rm = RoundingMode.values[0];
-    // e('-21', '0.000271', '-77490.77');
-    // test.isException(function () { Big.rm = Big('2'); e(1, 3, 0.3) }, "Big.rm = new Big('2')");
-    // Big.rm = RoundingMode.values[0];
-    // e('3.91', '0.0481', '81.28');
-
-    // e('1', '.1', '10');
-    // e('10', '1.', '10');
-    // e('144', '12.', '12');
-    // e('121', '1.e1', '12.1');
-
-    // // Division by zero.
-    // test.isException(function () {Big(0).div(0)}, "Big(0).div(0)");
-    // test.isException(function () {Big('0').div('-0')}, "Big('0').div('-0')");
-    // test.isException(function () {Big('0.0').div('-0.00')}, "Big('0.0').div('-0.00')");
-    // test.isException(function () {Big('-0.00000000').div('0.000000')}, "Big('-0.00000000').div('0.000000')");
-    // test.isException(function () {Big(1).div(0)}, "Big(1).div(0)");
-    // test.isException(function () {Big(1).div('-0')}, "Big(1).div('-0')");
-    // test.isException(function () {Big(9.99).div(0)}, "Big(9.99).div(0)");
-    // test.isException(function () {Big('-9.99').div(0)}, "Big('-9.99').div(0)");
-
-    // // Invalid divisors.
-    // test.isException(function () {Big('12.345').div(undefined)}, ".div(undefined)");
-    // test.isException(function () {Big('12.345').div(null)}, ".div(null)");
-    // test.isException(function () {Big('12.345').div(NaN)}, ".div(NaN)");
-    // test.isException(function () {Big('12.345').div('NaN')}, ".div('NaN')");
-    // test.isException(function () {Big('12.345').div([])}, ".div([])");
-    // test.isException(function () {Big('12.345').div({})}, ".div({})");
-    // test.isException(function () {Big('12.345').div('')}, ".div('')");
-    // test.isException(function () {Big('12.345').div(' ')}, ".div(' ')");
-    // test.isException(function () {Big('12.345').div('hello')}, ".div('hello')");
-    // test.isException(function () {Big('12.345').div('\t')}, ".div('\t')");
-    // test.isException(function () {Big('12.345').div(Date)}, ".div(new Date)");
-    // test.isException(function () {Big('12.345').div(RegExp)}, ".div(new RegExp)");
-    // test.isException(function () {Big('12.345').div(function () {})}, ".div(function () {})");
-    // test.isException(function () {Big('12.345').div(' 0.1')}, ".div(' 0.1')");
-    // test.isException(function () {Big('12.345').div('7.5 ')}, ".div('7.5 ')");
-    // test.isException(function () {Big('12.345').div(' 0 ')}, ".div(' 0 ')");
-    // test.isException(function () {Big('12.345').div('+1')}, ".div('+1')");
-    // test.isException(function () {Big('12.345').div(' +1.2')}, ".div(' +1.2')");
-    // test.isException(function () {Big('12.345').div('- 99')}, ".div('- 99')");
-    // test.isException(function () {Big('12.345').div('9.9.9')}, ".div('9.9.9')");
-    // test.isException(function () {Big('12.345').div('10.1.0')}, ".div('10.1.0')");
-    // test.isException(function () {Big('12.345').div('0x16')}, ".div('0x16')");
-    // test.isException(function () {Big('12.345').div('1e')}, ".div('1e')");
-    // test.isException(function () {Big('12.345').div('8 e')}, ".div('8 e')");
-    // test.isException(function () {Big('12.345').div('77-e')}, ".div('77-e')");
-    // test.isException(function () {Big('12.345').div('123e.0')}, ".div('123e.0')");
-    // test.isException(function () {Big('12.345').div('4e1.')}, ".div('4e1.')");
-    // test.isException(function () {Big('12.345').div(Infinity)}, ".div(Infinity)");
-    // test.isException(function () {Big('12.345').div('-Infinity')}, ".div('-Infinity')");
+    checkException(
+      () {
+        Big(9).div(Big.zero());
+      },
+      const TypeMatcher<BigError>(),
+    );
+    checkException(
+      () {
+        Big(9).div(Big.zero(isNegative: true));
+      },
+      const TypeMatcher<BigError>(),
+    );
 
     // ROUND_UP
     Big.dp = 0;
