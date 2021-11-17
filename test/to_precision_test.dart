@@ -7,7 +7,7 @@ import '_utils.dart';
 void main() {
   test('toPrecision', () {
     t(expected, value, [int? precision]) {
-      expect(Big(value).toPrecision(precision), expected.toString(),
+      expect(Big(value).toStringAsPrecision(precision), expected.toString(),
           reason: '$value.toPrecision($precision) = $expected');
     }
 
@@ -477,7 +477,7 @@ void main() {
 
     checkException(
       () {
-        Big(1.23).toPrecision((1e9).toInt());
+        Big(1.23).toStringAsPrecision((1e9).toInt());
       },
       const TypeMatcher<BigError>(),
     );

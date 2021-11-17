@@ -24,28 +24,43 @@ void main() {
     expect(Big(2).compareTo(Big(2)), 0);
   });
 
-  t(a, _b, expected) {
-    var b = Big(_b);
+  t(a, b, expected) {
     expect(Big(a).cmp(b).toString(), expected.toString());
 
     if (expected == 1) {
-      expect(Big(a).gt(b), true);
-      expect(Big(a).gte(b), true);
-      expect(!Big(a).eq(b), true);
-      expect(!Big(a).lt(b), true);
-      expect(!Big(a).lte(b), true);
+      expect(Big(a).gt(b), true, reason: "Big($a).gt($b)");
+      expect(Big(a).gte(b), true, reason: "Big($a).gte($b)");
+      expect(!Big(a).eq(b), true, reason: "!Big($a).eq($b)");
+      expect(!Big(a).lt(b), true, reason: "!Big($a).lt($b)");
+      expect(!Big(a).lte(b), true, reason: "!Big($a).lte($b)");
+      expect(Big(a) > b, true, reason: "Big($a) > $b");
+      expect(Big(a) >= b, true, reason: "Big($a) >= $b");
+      expect(Big(a) != b, true, reason: "Big($a) != $b");
+      expect(Big(a) > b, true, reason: "Big($a) > $b");
+      expect(Big(a) > b, true, reason: "Big($a) > $b");
     } else if (expected == -1) {
-      expect(Big(a).lt(b), true);
-      expect(Big(a).lte(b), true);
-      expect(!Big(a).eq(b), true);
-      expect(!Big(a).gt(b), true);
-      expect(!Big(a).gte(b), true);
+      expect(Big(a).lt(b), true, reason: "Big($a).lt($b)");
+      expect(Big(a).lte(b), true, reason: "Big($a).lte($b)");
+      expect(!Big(a).eq(b), true, reason: "!Big($a).eq($b)");
+      expect(!Big(a).gt(b), true, reason: "!Big($a).gt($b)");
+      expect(!Big(a).gte(b), true, reason: "!Big($a).gte($b)");
+
+      expect(Big(a) < b, true, reason: "Big($a) < $b");
+      expect(Big(a) <= b, true, reason: "Big($a) <= $b");
+      expect(Big(a) != b, true, reason: "Big($a) != $b");
+      expect(!(Big(a) > b), true, reason: "!(Big($a) > $b)");
+      expect(!(Big(a) >= b), true, reason: "!(Big($a) >= $b)");
     } else if (expected == 0) {
-      expect(Big(a).eq(b), true);
-      expect(Big(a).gte(b), true);
-      expect(Big(a).lte(b), true);
-      expect(!Big(a).lt(b), true);
-      expect(!Big(a).gt(b), true);
+      expect(Big(a).eq(b), true, reason: "Big($a).eq(4b)");
+      expect(Big(a).gte(b), true, reason: "Big($a).gte($b)");
+      expect(Big(a).lte(b), true, reason: "Big($a).lte($b)");
+      expect(!Big(a).lt(b), true, reason: "!Big($a).lt($b)");
+      expect(!Big(a).gt(b), true, reason: "!Big($a).gt($b)");
+      expect(Big(a) == b, true, reason: "Big($a) == $b");
+      expect(Big(a) >= b, true, reason: "Big($a) >= $b");
+      expect(Big(a) <= b, true, reason: "Big($a) <= $b");
+      expect(!(Big(a) < b), true, reason: "!(Big($a) < $b)");
+      expect(!(Big(a) > b), true, reason: "!(Big($a) > $b)");
     }
   }
 
@@ -103,7 +118,7 @@ void main() {
     expect(n.eq(n), true);
     expect(n.eq(n.toString().toBig), true);
     expect(n.eq(Big(n.valueOf())), true);
-    expect(n.eq(n.toFixed().toBig), true);
+    expect(n.eq(n.toStringAsFixed().toBig), true);
     expect(n.eq(1.toBig), true);
     expect(n.eq('1e+0'.toBig), true);
     expect(!n.eq((-1).toBig), true);

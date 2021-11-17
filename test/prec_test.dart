@@ -1,4 +1,5 @@
 import 'package:big_dart/big_dart.dart';
+import 'package:big_dart/src/utils.dart';
 
 import 'package:test/test.dart';
 
@@ -15,7 +16,7 @@ void main() {
       expect(
         Big(value)
             .prec(p, r != null ? RoundingMode.values.elementAtOrNull(r) : null)
-            .toFixed(),
+            .toStringAsFixed(),
         expected.toString(),
         reason: "$value p:$p r:$r = $expected",
       );
@@ -543,7 +544,7 @@ void main() {
       expect(
         Big(value)
             .prec(p, r != null ? RoundingMode.values.elementAtOrNull(r) : null)
-            .toExponential(),
+            .toStringAsExponential(),
         expected.toString(),
         reason: "$value p:$p r:$r = $expected",
       );

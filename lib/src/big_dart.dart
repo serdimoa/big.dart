@@ -5,64 +5,7 @@ import 'package:big_dart/src/errors.dart';
 import 'package:big_dart/src/round.dart';
 import 'package:big_dart/src/stringify.dart';
 import 'package:big_dart/src/utils.dart';
-import 'package:equatable/equatable.dart';
 import 'dart:math' as math;
-
-extension BigList<T> on List<T> {
-  List<T> slice(int begin, int end) {
-    int nextEnd;
-
-    if (end > length) {
-      nextEnd = length;
-    } else {
-      nextEnd = end;
-    }
-
-    return getRange(begin, nextEnd < 0 ? length + nextEnd : nextEnd).toList();
-  }
-}
-
-extension BigListExtension<T> on Iterable<T> {
-  T? elementAtOrNull(int index) {
-    if (index < 0) return null;
-    var count = 0;
-    for (final element in this) {
-      if (index == count++) return element;
-    }
-    return null;
-  }
-
-  T? get firstOrNull {
-    var iterator = this.iterator;
-    if (iterator.moveNext()) return iterator.current;
-    return null;
-  }
-
-  bool numberAtLikeJsTest(int index) {
-    var element = elementAtOrNull(index);
-    if (element == null) {
-      return false;
-    }
-    if (element is int || element is double) {
-      if (element == 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return true;
-  }
-}
-
-extension ListEx<T> on List<T> {
-  void reverse() {
-    for (var i = 0; i < length / 2; i++) {
-      var tempValue = elementAt(i);
-      this[i] = elementAt(length - 1 - i);
-      this[length - 1 - i] = tempValue;
-    }
-  }
-}
 
 var _numeric = RegExp(
   r"^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$",
@@ -70,7 +13,7 @@ var _numeric = RegExp(
   multiLine: false,
 );
 
-class Big extends Comparable<Big> with EquatableMixin {
+class Big extends Comparable<Big> {
   /// Returns an array of single digits
   late List<int> c;
 
@@ -153,7 +96,7 @@ class Big extends Comparable<Big> with EquatableMixin {
       if (n is! String) {
         if (Big.strict == true) {
           throw BigError(
-            code: BigErrorCode.type,
+            code: BigErrorCode.invalidNumber,
           );
         }
         // Minus zero?
@@ -809,7 +752,7 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// decimal places using rounding mode [rm], or [Big.rm] if [rm] is not specified.
   /// dp? [int] Decimal places: integer, 0 to maxDp inclusive.
   /// rm? [RoundingMode] Rounding mode
-  String toExponential({int? dp, RoundingMode? rm}) {
+  String toStringAsExponential({int? dp, RoundingMode? rm}) {
     var x = this, n = x.c[0];
 
     if (dp != null) {
@@ -836,7 +779,7 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// (-0).toFixed(dp:0) is '0', but (-0.1).toFixed(dp:0) is '-0'.
   /// (-0).toFixed(dp:1) is '0.0', but (-0.01).toFixed(dp:1) is '-0.0'.
   ///
-  String toFixed({int? dp, RoundingMode? rm}) {
+  String toStringAsFixed({int? dp, RoundingMode? rm}) {
     var x = this, n = x.c[0];
 
     if (dp != null) {
@@ -872,7 +815,7 @@ class Big extends Comparable<Big> with EquatableMixin {
     var n = double.parse(stringify(this, true, true));
     if (strict == true && !eq(Big(n.toString()))) {
       throw BigError(
-        code: BigErrorCode.type,
+        code: BigErrorCode.impreciseConversion,
       );
     }
     return n;
@@ -885,7 +828,7 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// sd {number} Significant digits: integer, 1 to maxDp inclusive.
   /// rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
 
-  String toPrecision([int? sd, RoundingMode? rm]) {
+  String toStringAsPrecision([int? sd, RoundingMode? rm]) {
     var x = this, n = x.c[0];
     if (sd != null) {
       if (sd != ~~sd || sd < 1 || sd > maxDp) {
@@ -915,14 +858,11 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     if (Big.strict == true) {
       throw BigError(
-        code: BigErrorCode.type,
+        code: BigErrorCode.invalidNumber,
       );
     }
     return stringify(x, x.e <= ne || x.e >= pe, true);
   }
-
-  @override
-  List<Object?> get props => [c, e, s];
 
   Big selfRound([int? dp, RoundingMode? roundingMode]) {
     if (dp == null) {
@@ -948,10 +888,27 @@ class Big extends Comparable<Big> with EquatableMixin {
   Big operator -(dynamic other) => sub(other);
   Big operator /(dynamic other) => div(other);
   Big operator *(dynamic other) => times(other);
-}
+  Big operator %(dynamic other) => mod(other);
+  bool operator <(dynamic other) => lt(other);
+  bool operator >(dynamic other) => gt(other);
+  bool operator >=(dynamic other) => gte(other);
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
 
-extension BigDynamic on dynamic {
-  Big get toBig => Big(this);
+    return eq(other);
+  }
+
+  bool operator <=(dynamic other) => lte(other);
+  Big operator -() {
+    s = -s;
+    return this;
+  }
+
+  // coverage:ignore-start
+  @override
+  int get hashCode => c.hashCode + e.hashCode + s.hashCode;
+  // coverage:ignore-end
 }
 
 extension BigInt on int {

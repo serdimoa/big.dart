@@ -14,14 +14,14 @@ void main() {
 
     checkException(
       () {
-        Big(1.23).toExponential(dp: 1e7.toInt());
+        Big(1.23).toStringAsExponential(dp: 1e7.toInt());
       },
       const TypeMatcher<BigError>(),
     );
 
     t(expected, value, [int? decimalPlaces]) {
       expect(
-        Big(value).toExponential(dp: decimalPlaces),
+        Big(value).toStringAsExponential(dp: decimalPlaces),
         expected.toString(),
         reason: '$value dp:$decimalPlaces = $value',
       );

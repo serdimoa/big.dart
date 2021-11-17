@@ -17,6 +17,11 @@ void main() {
         expected.toString(),
         reason: '$addendA + $addendB = $expected',
       );
+      expect(
+        (Big(addendA) + addendB).toString(),
+        expected.toString(),
+        reason: '$addendA + $addendB = $expected',
+      );
     }
 
     t(1, -2, -1);

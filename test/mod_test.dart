@@ -17,6 +17,22 @@ main() {
         expected.toString(),
         reason: '$a % $b = $expected',
       );
+      expect(
+        Big(a).mod(b).toString(),
+        expected.toString(),
+        reason: '$a % $b = $expected',
+      );
+      expect(
+        (Big(a) % b).toString(),
+        expected.toString(),
+        reason: '$a % $b = $expected',
+      );
+    }
+
+    try {
+      var _ = Big(1) % 0;
+    } catch (e) {
+      expect(e, BigError(code: BigErrorCode.divByZero));
     }
 
     Big.dp = 20;

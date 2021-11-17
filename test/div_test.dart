@@ -10,6 +10,16 @@ void main() {
       expected.toString(),
       reason: '$dividend / $divisor = $expected',
     );
+    expect(
+      (Big(dividend) / divisor).toString(),
+      expected.toString(),
+      reason: '$dividend / $divisor = $expected',
+    );
+    expect(
+      (Big(dividend).div(divisor)).toString(),
+      expected.toString(),
+      reason: '$dividend / $divisor = $expected',
+    );
   }
 
   test('div test with multiple dp and rm', () {

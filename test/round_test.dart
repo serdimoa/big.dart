@@ -1,6 +1,7 @@
 import 'package:big_dart/big_dart.dart';
 
 import 'package:test/test.dart';
+import 'package:big_dart/src/utils.dart';
 
 import '_utils.dart';
 

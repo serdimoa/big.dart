@@ -32,7 +32,7 @@ A small library for arbitrary-precision decimal arithmetic inspired by [big.js](
 
 *In the code examples below, semicolons and `toString` calls are not shown.*
 
-The library exports a single constructor function, `Big`.
+The library exports a some Extensions for String, double, int, `Big`.
 
 A Big number is created from a primitive number, string, or other Big number.
 
@@ -47,9 +47,9 @@ In Big strict mode, creating a Big number from a primitive number is disallowed.
 
 ```dart
 Big.strict = true
-x = Big(1)                         // TypeError: [big.dart] Invalid number
+x = Big(1)                         // BigError(code: BigErrorCode.invalidNumber)
 y = Big('1.0000000000000001')
-y.toNumber()                           // Error: [big.dart] Imprecise conversion
+y.toNumber()                           // BigError(code: BigErrorCode.impreciseConversion)
 ```
 
 A Big number is immutable in the sense that it is not changed by its methods.
@@ -57,24 +57,25 @@ A Big number is immutable in the sense that it is not changed by its methods.
 ```dart
 0.3 - 0.1                              // 0.19999999999999998
 x = Big(0.3)
-x.minus(0.1)                           // "0.2"
+x.sub(0.1)                             // "0.2"
+x-0.1                                  // Big(0.2)
 x                                      // "0.3"
 ```
 
 The methods that return a Big number can be chained.
 
 ```dart
-x.div(y).plus(z).times(9).minus('1.234567801234567e+8').plus(976.54321).div('2598.11772')
+x.div(y).add(z).times(9).sub('1.234567801234567e+8').add(976.54321).div('2598.11772')
 x.sqrt().div(y).pow(3).gt(y.mod(z))    // true
 ```
 
-Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods.
+Like JavaScript's Number type, there are `toStringAsExponential`, `toStringAsFixed` and `toStringAsPrecision` methods.
 
 ```dart
 x = Big(255.5)
-x.toExponential(5)                     // "2.55500e+2"
-x.toFixed(5)                           // "255.50000"
-x.toPrecision(5)                       // "255.50"
+x.toStringAsExponential(5)                     // "2.55500e+2"
+x.toStringAsFixed(5)                           // "255.50000"
+x.toStringAsPrecision(5)                       // "255.50"
 ```
 
 The arithmetic methods always return the exact result except `div`, `sqrt` and `pow`
@@ -104,6 +105,6 @@ x.s                                    // -1               sign
 ```
 
 
-(dart code fully converted to Dart with test and etc.)
+(big.js code fully converted to Dart with test and etc.)
 
 

@@ -16,6 +16,16 @@ void main() {
         expected.toString(),
         reason: "$minuend-$subtrahend=$expected",
       );
+      expect(
+        Big(minuend).sub(subtrahend).toString(),
+        expected.toString(),
+        reason: "$minuend-$subtrahend=$expected",
+      );
+      expect(
+        (Big(minuend) - subtrahend).toString(),
+        expected.toString(),
+        reason: "$minuend-$subtrahend=$expected",
+      );
     }
 
     t(1, 0, 1);

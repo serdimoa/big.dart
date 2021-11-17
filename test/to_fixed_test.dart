@@ -15,14 +15,14 @@ void main() {
 
     checkException(
       () {
-        Big(1.23).toFixed(dp: 1e7.toInt());
+        Big(1.23).toStringAsFixed(dp: 1e7.toInt());
       },
       const TypeMatcher<BigError>(),
     );
 
     t(expected, value, [int? decimalPlaces]) {
       expect(
-        Big(value).toFixed(dp: decimalPlaces).toString(),
+        Big(value).toStringAsFixed(dp: decimalPlaces).toString(),
         expected.toString(),
         reason: '$value dp:$decimalPlaces = $expected',
       );

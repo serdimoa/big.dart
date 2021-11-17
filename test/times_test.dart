@@ -127,16 +127,27 @@ void main() {
     );
 
     t(multiplicand, multiplier, expected) {
-      expect(Big(multiplicand).times(Big(multiplier)).toString(),
-          expected.toString(),
-          reason: "$multiplicand * $multiplier = $expected");
-      //test.areEqual(String(expected), String(new Big(multiplicand).times(new Big(multiplier))));
+      expect(
+        Big(multiplicand).times(Big(multiplier)).toString(),
+        expected.toString(),
+        reason: "$multiplicand * $multiplier = $expected",
+      );
+      expect(
+        Big(multiplicand).times(multiplier).toString(),
+        expected.toString(),
+        reason: "$multiplicand * $multiplier = $expected",
+      );
+      expect(
+        (Big(multiplicand) * multiplier).toString(),
+        expected.toString(),
+        reason: "$multiplicand * $multiplier = $expected",
+      );
     }
 
     isPositiveZero((Big(1).times(0.toBig)));
-    isNegativeZero((Big(1).times(Big.zero(isNegative: true).toBig)));
+    isNegativeZero((Big(1).times(Big.zero(isNegative: true))));
     isNegativeZero((Big(-1).times(0.toBig)));
-    isPositiveZero((Big(-1).times(Big.zero(isNegative: true).toBig)));
+    isPositiveZero((Big(-1).times(Big.zero(isNegative: true))));
     isPositiveZero((Big(0).times(1.toBig)));
     isNegativeZero((Big(0).times((-1).toBig)));
     isNegativeZero((Big.zero(isNegative: true).times(1.toBig)));
