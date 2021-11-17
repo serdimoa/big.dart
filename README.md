@@ -1,22 +1,10 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+A small library for arbitrary-precision decimal arithmetic inspired by [big.js](https://github.com/MikeMcl/big.js/)
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
 [![Coverage Status](https://coveralls.io/repos/github/serdimoa/big.dart/badge.svg)](https://coveralls.io/github/serdimoa/big.dart)
 ![build](https://github.com/serdimoa/big.dart/workflows/big.dart/badge.svg)
 [![style: dart lint recommended](https://img.shields.io/badge/style-lints_recommended-40c4ff.svg)](https://pub.dev/packages/lints)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-
-A small library for arbitrary-precision decimal arithmetic inspired by [big.js](https://github.com/MikeMcl/big.js/)
 
 ## Features
 
@@ -32,9 +20,9 @@ A small library for arbitrary-precision decimal arithmetic inspired by [big.js](
 
 *In the code examples below, semicolons and `toString` calls are not shown.*
 
-The library exports a some Extensions for String, double, int, `Big`.
+The library exports a some Extensions for `String`, `double`, `int`, `Big`.
 
-A Big number is created from a primitive number, string, or other Big number.
+A Big number is created from a primitive `number`, `String`, or other `Big` number.
 
 ```dart
 var x = Big(123.4567)
@@ -49,7 +37,7 @@ In Big strict mode, creating a Big number from a primitive number is disallowed.
 Big.strict = true
 x = Big(1)                         // BigError(code: BigErrorCode.invalidNumber)
 y = Big('1.0000000000000001')
-y.toNumber()                           // BigError(code: BigErrorCode.impreciseConversion)
+y.toNumber()                       // BigError(code: BigErrorCode.impreciseConversion)
 ```
 
 A Big number is immutable in the sense that it is not changed by its methods.
@@ -105,6 +93,5 @@ x.s                                    // -1               sign
 ```
 
 
-(big.js code fully converted to Dart with test and etc.)
 
 
