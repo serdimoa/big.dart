@@ -295,9 +295,16 @@ class Big extends Comparable<Big> with EquatableMixin {
   /// * `1` if the value of this [Big] is greater than the value of [Big] [y],
   /// * `-1` if the value of this [Big] is less than the value of [Big] [y],
   /// * `0` if they have the same value.
-  int cmp(Big y) {
+  int cmp(dynamic y) {
     bool isNegative;
-    var x = this, xc = x.c, yc = y.c, i = x.s, j = y.s, k = x.e, l = y.e;
+    var yBig = Big(y);
+    var x = this,
+        xc = x.c,
+        yc = yBig.c,
+        i = x.s,
+        j = yBig.s,
+        k = x.e,
+        l = yBig.e;
 
     // Either zero?
     if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
@@ -335,12 +342,12 @@ class Big extends Comparable<Big> with EquatableMixin {
 
   /// Return a new [Big] whose value is the value of this [Big] divided by the value of [Big] y, rounded,
   /// if necessary, to a maximum of [Big.dp] decimal places using rounding mode [Big.rm].
-  Big div(Big y) {
-    y = Big(y);
+  Big div(dynamic y) {
+    var yBig = Big(y);
     var x = this,
         a = x.c, // dividend
-        b = y.c, // divisor
-        k = x.s == y.s ? 1 : -1,
+        b = yBig.c, // divisor
+        k = x.s == yBig.s ? 1 : -1,
         dp = Big.dp;
 
     // Divisor is zero?
@@ -352,9 +359,9 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     // Dividend is 0? Return +-0.
     if (!a.numberAtLikeJsTest(0)) {
-      y.s = k;
-      y.c = [y.e = 0];
-      return y;
+      yBig.s = k;
+      yBig.c = [yBig.e = 0];
+      return yBig;
     }
     int? cmp;
     int n, ri, bl;
@@ -362,10 +369,10 @@ class Big extends Comparable<Big> with EquatableMixin {
     var bz = [...b],
         ai = bl = b.length,
         al = a.length,
-        q = y, // quotient
+        q = yBig, // quotient
         qc = q.c = [],
         qi = 0;
-    q.e = x.e - y.e;
+    q.e = x.e - yBig.e;
     var p = dp + q.e + 1; // precision of the result
 
     var r = a.slice(0, bl); // remainder
@@ -455,58 +462,58 @@ class Big extends Comparable<Big> with EquatableMixin {
   }
 
   /// Return true if the value of this [Big] is equal to the value of [Big] y, otherwise return false.
-  bool eq(Big y) {
+  bool eq(dynamic y) {
     return cmp(y) == 0;
   }
 
   /// Return true if the value of this [Big] is greater than the value of [Big] y, otherwise return
   /// false.
-  bool gt(Big y) {
+  bool gt(dynamic y) {
     return cmp(y) > 0;
   }
 
   /// Return true if the value of this [Big] is greater than or equal to the value of [Big] y, otherwise
   /// return false.
-  bool gte(Big y) {
+  bool gte(dynamic y) {
     return cmp(y) > -1;
   }
 
   /// Return true if the value of this [Big] is less than the value of [Big] y, otherwise return false.
-  bool lt(Big y) {
+  bool lt(dynamic y) {
     return cmp(y) < 0;
   }
 
   ///  Return true if the value of this [Big] is less than or equal to the value of [Big] y, otherwise
   ///  return false.
-  bool lte(Big y) {
+  bool lte(dynamic y) {
     return cmp(y) < 1;
   }
 
   /// Return a new [Big] whose value is the value of this [Big] minus the value of [Big] y.
-  Big sub(Big y) {
-    y = Big(y);
+  Big sub(dynamic y) {
+    var yBig = Big(y);
     int i, j;
     List<int> t;
-    var x = this, a = x.s, b = y.s;
+    var x = this, a = x.s, b = yBig.s;
     bool isXLtY;
     // Signs differ?
     if (a != b) {
-      y.s = -b;
-      return x.add(y);
+      yBig.s = -b;
+      return x.add(yBig);
     }
 
-    var xc = [...x.c], xe = x.e, yc = y.c, ye = y.e;
+    var xc = [...x.c], xe = x.e, yc = yBig.c, ye = yBig.e;
 
     // Either zero?
     if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
       if (yc.numberAtLikeJsTest(0)) {
-        y.s = -b;
+        yBig.s = -b;
       } else if (xc.numberAtLikeJsTest(0)) {
-        y = Big(x);
+        yBig = Big(x);
       } else {
-        y.s = 1;
+        yBig.s = 1;
       }
-      return y;
+      return yBig;
     }
 
     a = xe - ye;
@@ -543,7 +550,7 @@ class Big extends Comparable<Big> with EquatableMixin {
       t = xc;
       xc = yc;
       yc = t;
-      y.s = -y.s;
+      yBig.s = -yBig.s;
     }
 
     /// Append zeros to xc if shorter. No need to add zeros to yc if shorter as subtraction only
@@ -585,70 +592,70 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     if (!xc.numberAtLikeJsTest(0)) {
       // n - n = +0
-      y.s = 1;
+      yBig.s = 1;
 
       // Result must be zero.
       xc = [ye = 0];
     }
 
-    y.c = xc;
-    y.e = ye;
+    yBig.c = xc;
+    yBig.e = ye;
 
-    return y;
+    return yBig;
   }
 
   /// Return a new [Big] whose value is the value of this [Big] modulo the value of [Big] y.
-  Big mod(Big y) {
+  Big mod(dynamic y) {
     bool isYgtX;
-    y = Big(y);
-    var x = this, a = x.s, b = y.s;
+    var yBig = Big(y);
+    var x = this, a = x.s, b = yBig.s;
 
-    if (!y.c.numberAtLikeJsTest(0)) {
+    if (!yBig.c.numberAtLikeJsTest(0)) {
       throw BigError(
         code: BigErrorCode.divByZero,
       );
     }
 
-    x.s = y.s = 1;
-    isYgtX = y.cmp(x) == 1;
+    x.s = yBig.s = 1;
+    isYgtX = yBig.cmp(x) == 1;
     x.s = a;
-    y.s = b;
+    yBig.s = b;
     if (isYgtX) return Big(x);
 
     var tempRm = rm;
     a = dp;
     rm = RoundingMode.roundDown;
     dp = 0;
-    x = x.div(y);
+    x = x.div(yBig);
     dp = a;
     rm = tempRm;
-    return sub(x.times(y));
+    return sub(x.times(yBig));
   }
 
   /// Return a new Big whose value is the value of this [Big] plus the value of [Big] y.
-  Big add(Big y) {
+  Big add(dynamic y) {
+    var yBig = Big(y);
     int e, k;
     List<int> t;
     Big x = this;
-    y = Big(y);
 
     // Signs differ?
-    if (x.s != y.s) {
-      y.s = -y.s;
-      return x.sub(y);
+    if (x.s != yBig.s) {
+      yBig.s = -yBig.s;
+      return x.sub(yBig);
     }
 
-    var xe = x.e, xc = x.c, ye = y.e, yc = y.c;
+    var xe = x.e, xc = x.c, ye = yBig.e, yc = yBig.c;
     // Either zero?
     if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
       if (!yc.numberAtLikeJsTest(0)) {
         if (xc.numberAtLikeJsTest(0)) {
-          y = Big(x);
+          yBig = Big(x);
         } else {
-          y.s = x.s;
+          yBig.s = x.s;
         }
       }
-      return y;
+      return yBig;
     }
     xc = [...xc];
 
@@ -697,10 +704,10 @@ class Big extends Comparable<Big> with EquatableMixin {
       xc.removeLast();
     }
 
-    y.c = xc;
-    y.e = ye;
+    yBig.c = xc;
+    yBig.e = ye;
 
-    return y;
+    return yBig;
   }
 
   /// Return a [Big] whose value is the value of this [Big] raised to the power [n].
@@ -728,28 +735,28 @@ class Big extends Comparable<Big> with EquatableMixin {
   }
 
   /// Return a new [Big] whose value is the value of this [Big] times the value of Big y.
-  Big times(Big y) {
+  Big times(dynamic y) {
     List<int> c;
-    y = Big(y);
+    var yBig = Big(y);
     var x = this,
         xc = x.c,
-        yc = y.c,
+        yc = yBig.c,
         a = xc.length,
         b = yc.length,
         i = x.e,
-        j = y.e;
+        j = yBig.e;
 
     // Determine sign of result.
-    y.s = x.s == y.s ? 1 : -1;
+    yBig.s = x.s == yBig.s ? 1 : -1;
 
     // Return signed 0 if either 0.
     if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
-      y.c = [y.e = 0];
-      return y;
+      yBig.c = [yBig.e = 0];
+      return yBig;
     }
 
     // Initialize exponent of result as x.e + y.e.
-    y.e = i + j;
+    yBig.e = i + j;
 
     // If array xc has fewer digits than yc, swap xc and yc, and lengths.
     if (a < b) {
@@ -784,7 +791,7 @@ class Big extends Comparable<Big> with EquatableMixin {
 
     // Increment result exponent if there is a final carry, otherwise remove leading zero.
     if (b != 0) {
-      ++y.e;
+      ++yBig.e;
     } else {
       c.removeAt(0);
     }
@@ -794,8 +801,8 @@ class Big extends Comparable<Big> with EquatableMixin {
       c.removeLast();
     }
 
-    y.c = c;
-    return y;
+    yBig.c = c;
+    return yBig;
   }
 
   /// Return a string representing the value of this [Big] in exponential notation rounded to [dp] fixed
@@ -936,6 +943,11 @@ class Big extends Comparable<Big> with EquatableMixin {
   int compareTo(other) {
     return cmp(other);
   }
+
+  Big operator +(dynamic other) => add(other);
+  Big operator -(dynamic other) => sub(other);
+  Big operator /(dynamic other) => div(other);
+  Big operator *(dynamic other) => times(other);
 }
 
 extension BigDynamic on dynamic {

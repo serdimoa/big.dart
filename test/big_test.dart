@@ -13,6 +13,11 @@ void main() {
       Big.pe = 21;
     });
 
+    test('use number to calculate', () {
+      var a = Big(3);
+      expect(a.div(3).toString(), '1');
+    });
+
     test('Value of', () {
       Big.strict = true;
       var y = Big('-0');
