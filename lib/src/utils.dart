@@ -41,7 +41,8 @@ extension BigListExtension<T> on Iterable<T> {
     return null;
   }
 
-  bool numberAtLikeJsTest(int index) {
+  /// Check array element on null, zero and string to contain any elements to valid state
+  bool isElementIsValid(int index) {
     var element = elementAtOrNull(index);
     if (element == null) {
       return false;
@@ -52,6 +53,9 @@ extension BigListExtension<T> on Iterable<T> {
       } else {
         return true;
       }
+    }
+    if (element is String) {
+      return element.isNotEmpty;
     }
     return true;
   }

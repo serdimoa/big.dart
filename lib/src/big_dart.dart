@@ -1,8 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:big_dart/src/common.dart';
 import 'package:big_dart/src/errors.dart';
-import 'package:big_dart/src/round.dart';
 import 'package:big_dart/src/stringify.dart';
 import 'package:big_dart/src/utils.dart';
 import 'dart:math' as math;
@@ -12,6 +10,23 @@ var _numeric = RegExp(
   caseSensitive: false,
   multiLine: false,
 );
+
+enum RoundingMode {
+  /// Rounds towards zero.
+  /// I.e. truncate, no rounding.
+  roundDown,
+
+  ///  Rounds towards nearest neighbour.
+  ///  If equidistant, rounds away from zero.
+  roundHalfUp,
+
+  ///  Rounds towards nearest neighbour.
+  ///   If equidistant, rounds towards even neighbour.
+  roundHalfEven,
+
+  ///Rounds away from zero
+  roundUp,
+}
 
 class Big extends Comparable<Big> {
   /// Returns an array of single digits
@@ -55,13 +70,6 @@ class Big extends Comparable<Big> {
   /// primitive number without a loss of precision.
   static var strict = false; // true or false
 
-  // Error messages.
-  static const name = '[big.dart] ';
-  static const invalid = name + 'Invalid ';
-  static const invalidDp = invalid + 'decimal places';
-  static const invalidRm = invalid + 'rounding mode';
-  static const divByZero = name + 'Division by zero';
-
   Big.zero({bool isNegative = false}) {
     if (isNegative) {
       parse(this, '-0');
@@ -70,16 +78,16 @@ class Big extends Comparable<Big> {
     }
   }
 
-  /// Return a new Big whose value is the value of this Big rounded to a maximum precision of sd
-  /// significant digits using rounding mode rm, or Big.rm if rm is not specified.
+  /// Return a new Big whose value is the value of this [Big] rounded to a maximum precision of sd
+  /// significant digits using rounding mode [rm], or [Big.rm] if [rm] is not specified.
   ///
-  /// sd [int] Significant digits: integer, 1 to MAX_DP inclusive.
-  /// rm? [RoundingMode] Rounding mode.
+  /// * [sd] [int] Significant digits: integer, 1 to [maxDp] inclusive.
+  /// * [rm]? [RoundingMode] Rounding mode.
   Big prec(int sd, [RoundingMode? _rm]) {
     if (sd != ~~sd || sd < 1 || sd > maxDp) {
       throw BigError(code: BigErrorCode.dp);
     }
-    return round(
+    return _round(
       Big(this),
       sd,
       _rm,
@@ -113,9 +121,9 @@ class Big extends Comparable<Big> {
     }
   }
 
-  /// Parse the number or string value passed to a Big constructor.
-  ///  x [Big] A Big number instance.
-  ///  n [String] A numeric value.
+  /// Parse the number or string value passed to a [Big] constructor.
+  /// * x [Big] A Big number instance.
+  /// * n [String] A numeric value.
   Big parse(Big x, String n) {
     int e, i, nl;
 
@@ -219,7 +227,7 @@ class Big extends Comparable<Big> {
       r = half.times(t.add(x.div(t)));
     } while (t.c.slice(0, e).join('') != r.c.slice(0, e).join(''));
 
-    return round(
+    return _round(
       r,
       ((dp -= 4) + r.e + 1).toInt(),
       rm,
@@ -250,9 +258,9 @@ class Big extends Comparable<Big> {
         l = yBig.e;
 
     // Either zero?
-    if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
-      return !xc.numberAtLikeJsTest(0)
-          ? !yc.numberAtLikeJsTest(0)
+    if (!xc.isElementIsValid(0) || !yc.isElementIsValid(0)) {
+      return !xc.isElementIsValid(0)
+          ? !yc.isElementIsValid(0)
               ? 0
               : -j
           : i;
@@ -294,14 +302,14 @@ class Big extends Comparable<Big> {
         dp = Big.dp;
 
     // Divisor is zero?
-    if (!b.numberAtLikeJsTest(0)) {
+    if (!b.isElementIsValid(0)) {
       throw BigError(
         code: BigErrorCode.divByZero,
       );
     }
 
     // Dividend is 0? Return +-0.
-    if (!a.numberAtLikeJsTest(0)) {
+    if (!a.isElementIsValid(0)) {
       yBig.s = k;
       yBig.c = [yBig.e = 0];
       return yBig;
@@ -355,7 +363,7 @@ class Big extends Comparable<Big> {
           for (bt = rl == bl ? b : bz; rl != 0;) {
             if (r[--rl] < (bt.elementAtOrNull(rl) ?? 0)) {
               ri = rl;
-              for (; ri != 0 && !r.numberAtLikeJsTest(--ri);) {
+              for (; ri != 0 && !r.isElementIsValid(--ri);) {
                 r[ri] = 9;
               }
               --r[ri];
@@ -364,7 +372,7 @@ class Big extends Comparable<Big> {
             r[rl] -= bt.elementAtOrNull(rl) ?? 0;
           }
 
-          for (; !r.numberAtLikeJsTest(0);) {
+          for (; !r.isElementIsValid(0);) {
             r.removeAt(0);
           }
         } else {
@@ -381,7 +389,7 @@ class Big extends Comparable<Big> {
         qc.add(++n);
       }
       // Update the remainder.
-      if (r.numberAtLikeJsTest(0) && cmp != null && cmp != 0) {
+      if (r.isElementIsValid(0) && cmp != null && cmp != 0) {
         r.add(a.elementAtOrNull(ai) ?? 0);
       } else {
         r = a.elementAtOrNull(ai) != null ? [a.elementAt(ai)] : [];
@@ -389,7 +397,7 @@ class Big extends Comparable<Big> {
     } while ((ai++ < al || r.firstOrNull != null) && (k--).intToBool);
 
     // Leading zero? Do not remove if result is simply zero (qi == 1).
-    if (!qc.numberAtLikeJsTest(0) && qi != 1) {
+    if (!qc.isElementIsValid(0) && qi != 1) {
       // There can't be more than one zero.
       qc.removeAt(0);
       q.e--;
@@ -398,7 +406,7 @@ class Big extends Comparable<Big> {
 
     // Round?
     if (qi > p) {
-      round(q, p, rm, more: r.firstOrNull != null);
+      _round(q, p, rm, more: r.firstOrNull != null);
     }
 
     return q;
@@ -448,10 +456,10 @@ class Big extends Comparable<Big> {
     var xc = [...x.c], xe = x.e, yc = yBig.c, ye = yBig.e;
 
     // Either zero?
-    if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
-      if (yc.numberAtLikeJsTest(0)) {
+    if (!xc.isElementIsValid(0) || !yc.isElementIsValid(0)) {
+      if (yc.isElementIsValid(0)) {
         yBig.s = -b;
-      } else if (xc.numberAtLikeJsTest(0)) {
+      } else if (xc.isElementIsValid(0)) {
         yBig = Big(x);
       } else {
         yBig.s = 1;
@@ -510,7 +518,7 @@ class Big extends Comparable<Big> {
     // Subtract yc from xc.
     for (b = i; j > a;) {
       if (xc[--j] < yc[j]) {
-        for (i = j; i > 0 && !xc.numberAtLikeJsTest(--i);) {
+        for (i = j; i > 0 && !xc.isElementIsValid(--i);) {
           xc[i] = 9;
         }
         --xc[i];
@@ -533,7 +541,7 @@ class Big extends Comparable<Big> {
       --ye;
     }
 
-    if (!xc.numberAtLikeJsTest(0)) {
+    if (!xc.isElementIsValid(0)) {
       // n - n = +0
       yBig.s = 1;
 
@@ -553,7 +561,7 @@ class Big extends Comparable<Big> {
     var yBig = Big(y);
     var x = this, a = x.s, b = yBig.s;
 
-    if (!yBig.c.numberAtLikeJsTest(0)) {
+    if (!yBig.c.isElementIsValid(0)) {
       throw BigError(
         code: BigErrorCode.divByZero,
       );
@@ -575,7 +583,7 @@ class Big extends Comparable<Big> {
     return sub(x.times(yBig));
   }
 
-  /// Return a new Big whose value is the value of this [Big] plus the value of [Big] y.
+  /// Return a new [Big] whose value is the value of this [Big] plus the value of [Big] [y].
   Big add(dynamic y) {
     var yBig = Big(y);
     int e, k;
@@ -590,9 +598,9 @@ class Big extends Comparable<Big> {
 
     var xe = x.e, xc = x.c, ye = yBig.e, yc = yBig.c;
     // Either zero?
-    if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
-      if (!yc.numberAtLikeJsTest(0)) {
-        if (xc.numberAtLikeJsTest(0)) {
+    if (!xc.isElementIsValid(0) || !yc.isElementIsValid(0)) {
+      if (!yc.isElementIsValid(0)) {
+        if (xc.isElementIsValid(0)) {
           yBig = Big(x);
         } else {
           yBig.s = x.s;
@@ -656,7 +664,7 @@ class Big extends Comparable<Big> {
   /// Return a [Big] whose value is the value of this [Big] raised to the power [n].
   /// If [n] is negative, round to a maximum of [Big.dp] decimal places using rounding
   /// mode [Big.rm].
-  /// n [int] Integer, -[maxPower] to [maxPower] inclusive.
+  /// * [n] [int] power -[maxPower] to [maxPower] inclusive.
   Big pow(int n) {
     if (n != ~~n || n < -maxPower || n > maxPower) {
       throw BigError(
@@ -677,7 +685,7 @@ class Big extends Comparable<Big> {
     return isNegative ? one.div(y) : y;
   }
 
-  /// Return a new [Big] whose value is the value of this [Big] times the value of Big y.
+  /// Return a new [Big] whose value is the value of this [Big] times the value of [Big] y.
   Big times(dynamic y) {
     List<int> c;
     var yBig = Big(y);
@@ -693,7 +701,7 @@ class Big extends Comparable<Big> {
     yBig.s = x.s == yBig.s ? 1 : -1;
 
     // Return signed 0 if either 0.
-    if (!xc.numberAtLikeJsTest(0) || !yc.numberAtLikeJsTest(0)) {
+    if (!xc.isElementIsValid(0) || !yc.isElementIsValid(0)) {
       yBig.c = [yBig.e = 0];
       return yBig;
     }
@@ -740,7 +748,7 @@ class Big extends Comparable<Big> {
     }
 
     // Remove trailing zeros.
-    for (i = c.length; !c.numberAtLikeJsTest(--i);) {
+    for (i = c.length; !c.isElementIsValid(--i);) {
       c.removeLast();
     }
 
@@ -750,8 +758,8 @@ class Big extends Comparable<Big> {
 
   /// Return a string representing the value of this [Big] in exponential notation rounded to [dp] fixed
   /// decimal places using rounding mode [rm], or [Big.rm] if [rm] is not specified.
-  /// dp? [int] Decimal places: integer, 0 to maxDp inclusive.
-  /// rm? [RoundingMode] Rounding mode
+  /// * [dp]? [int] Decimal places: integer, 0 to maxDp inclusive.
+  /// * [rm]? [RoundingMode] Rounding mode
   String toStringAsExponential({int? dp, RoundingMode? rm}) {
     var x = this, n = x.c[0];
 
@@ -761,7 +769,7 @@ class Big extends Comparable<Big> {
           code: BigErrorCode.dp,
         );
       }
-      x = round(Big(x), ++dp, rm);
+      x = _round(Big(x), ++dp, rm);
       for (; x.c.length < dp;) {
         x.c.add(0);
       }
@@ -770,11 +778,11 @@ class Big extends Comparable<Big> {
     return stringify(x, true, n != 0);
   }
 
-  /// Return a string representing the value of this Big in normal notation rounded to dp fixed
+  /// Return a string representing the value of this [Big] in normal notation rounded to [dp] fixed
   /// decimal places using rounding mode [rm], or [Big.rm] if rm is not specified.
   ///
-  /// dp? [int] Decimal places: integer, 0 to maxDp inclusive.
-  /// rm? [RoundingMode] Rounding mode.
+  /// * [dp]? [int] Decimal places: integer, 0 to maxDp inclusive.
+  /// * [rm]? [RoundingMode] Rounding mode.
   ///
   /// (-0).toFixed(dp:0) is '0', but (-0.1).toFixed(dp:0) is '-0'.
   /// (-0).toFixed(dp:1) is '0.0', but (-0.01).toFixed(dp:1) is '-0.0'.
@@ -788,7 +796,7 @@ class Big extends Comparable<Big> {
           code: BigErrorCode.dp,
         );
       }
-      x = round(Big(x), dp + x.e + 1, rm);
+      x = _round(Big(x), dp + x.e + 1, rm);
 
       // x.e may have changed if the value is rounded up.
       for (dp = dp + x.e + 1; x.c.length < dp;) {
@@ -799,18 +807,18 @@ class Big extends Comparable<Big> {
     return stringify(x, false, n != 0);
   }
 
-  /// Return a string representing the value of this Big.
-  /// Return exponential notation if this Big has a positive exponent equal to or greater than
-  /// Big.PE, or a negative exponent equal to or less than Big.NE.
+  /// Return a string representing the value of this [Big].
+  /// Return exponential notation if this [Big] has a positive exponent equal to or greater than
+  /// [Big.pe], or a negative exponent equal to or less than [Big.ne].
   /// Omit the sign for negative zero.
 
   @override
   toString() {
     var x = this;
-    return stringify(x, x.e <= ne || x.e >= pe, x.c.numberAtLikeJsTest(0));
+    return stringify(x, x.e <= ne || x.e >= pe, x.c.isElementIsValid(0));
   }
 
-  /// Return the value of this Big as a primitive number.
+  /// Return the value of this [Big] as a primitive number.
   double toNumber() {
     var n = double.parse(stringify(this, true, true));
     if (strict == true && !eq(Big(n.toString()))) {
@@ -821,12 +829,12 @@ class Big extends Comparable<Big> {
     return n;
   }
 
-  /// Return a string representing the value of this Big rounded to sd significant digits using
-  /// rounding mode rm, or Big.rm if rm is not specified.
+  /// Return a string representing the value of this [Big] rounded to sd significant digits using
+  /// rounding mode rm, or [Big.rm] if rm is not specified.
   /// Use exponential notation if sd is less than the number of digits necessary to represent
   /// the integer part of the value in normal notation.
-  /// sd {number} Significant digits: integer, 1 to maxDp inclusive.
-  /// rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+  /// * [sd]? [int] Significant digits: integer, 1 to [maxDp] inclusive.
+  /// * [rm]? [RoundingMode] Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
 
   String toStringAsPrecision([int? sd, RoundingMode? rm]) {
     var x = this, n = x.c[0];
@@ -836,7 +844,7 @@ class Big extends Comparable<Big> {
           code: BigErrorCode.sd,
         );
       }
-      x = round(Big(x), sd, rm);
+      x = _round(Big(x), sd, rm);
       for (; x.c.length < sd;) {
         x.c.add(0);
       }
@@ -849,7 +857,7 @@ class Big extends Comparable<Big> {
     );
   }
 
-  /// Return a string representing the value of this Big.
+  /// Return a string representing the value of this [Big].
   /// Return exponential notation if this Big has a positive exponent equal to or greater than
   /// [Big.pe], or a negative exponent equal to or less than [Big.ne].
   /// Include the sign for negative zero.
@@ -872,7 +880,7 @@ class Big extends Comparable<Big> {
         code: BigErrorCode.dp,
       );
     }
-    return round(
+    return _round(
       Big(this),
       dp + e + 1,
       roundingMode,
@@ -884,25 +892,42 @@ class Big extends Comparable<Big> {
     return cmp(other);
   }
 
+  /// See [Big.add]
   Big operator +(dynamic other) => add(other);
+
+  /// See [Big.sub]
   Big operator -(dynamic other) => sub(other);
+
+  /// See [Big.div]
   Big operator /(dynamic other) => div(other);
+
+  /// See [Big.times]
   Big operator *(dynamic other) => times(other);
+
+  /// See [Big.mod]
   Big operator %(dynamic other) => mod(other);
+
+  /// See [Big.lt]
   bool operator <(dynamic other) => lt(other);
+
+  /// See [Big.gt]
   bool operator >(dynamic other) => gt(other);
+
+  /// See [Big.gte]
   bool operator >=(dynamic other) => gte(other);
+
+  /// See [Big.lte]
+  bool operator <=(dynamic other) => lte(other);
+  Big operator -() {
+    s = -s;
+    return this;
+  }
+
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
 
     return eq(other);
-  }
-
-  bool operator <=(dynamic other) => lte(other);
-  Big operator -() {
-    s = -s;
-    return this;
   }
 
   // coverage:ignore-start
@@ -911,15 +936,100 @@ class Big extends Comparable<Big> {
   // coverage:ignore-end
 }
 
-extension BigInt on int {
-  Big get toBig => Big(this);
+///  Round [Big] [x] to a maximum of [sd] significant digits using rounding mode [rm].
+
+///  * [x] [Big] The Big to round.
+///  * [sd] [int] Significant digits: integer, 0 to [Big.maxDp] inclusive.
+///  * [rm] [RoundingMode] Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+///  * [more] [bool] Whether the result of division was truncated.
+
+Big _round(Big x, int sd, RoundingMode? rm, {bool more = false}) {
+  var xc = x.c;
+  rm ??= x.RM;
+
+  if (sd < 1) {
+    more = rm == RoundingMode.roundUp && (more || xc.isElementIsValid(0)) ||
+        sd == 0 &&
+            (rm == RoundingMode.roundHalfUp && (xc.firstOrNull ?? 0) >= 5 ||
+                rm == RoundingMode.roundHalfEven &&
+                    ((xc.firstOrNull ?? 0) > 5 ||
+                        xc.firstOrNull == 5 &&
+                            (more || xc.isElementIsValid(2))));
+
+    xc.length = 1;
+
+    if (more) {
+      // 1, 0.1, 0.01, 0.001, 0.0001 etc.
+      x.e = x.e - sd + 1;
+      xc[0] = 1;
+    } else {
+      // Zero.
+      xc[0] = x.e = 0;
+    }
+  } else if (sd < xc.length) {
+    // xc[sd] is the digit after the digit that may be rounded up.
+    switch (rm) {
+      case RoundingMode.roundDown:
+        more = false;
+        break;
+      case RoundingMode.roundHalfUp:
+        more = xc.elementAt(sd) >= 5;
+        break;
+      case RoundingMode.roundHalfEven:
+        if (xc.elementAt(sd) > 5) {
+          more = true;
+        } else {
+          if (xc.elementAt(sd) == 5) {
+            if (more == false) {
+              more = xc.elementAtOrNull(sd + 1) != null ||
+                  (xc.elementAt(sd - 1) & 1) != 0;
+            }
+          } else {
+            more = false;
+          }
+        }
+        break;
+      case RoundingMode.roundUp:
+        more = (more || xc.isElementIsValid(0));
+        break;
+    }
+
+    // Remove any digits after the required precision.
+    xc.length = sd--;
+    // Round up?
+    if (more) {
+      // Rounding up may mean the previous digit has to be rounded up.
+      for (; (++xc[sd]) > 9;) {
+        xc[sd] = 0;
+        if (sd-- == 0) {
+          ++x.e;
+          unShift(xc, 1);
+
+          if (sd == -1) {
+            break;
+          }
+        }
+      }
+    }
+
+    // Remove trailing zeros.
+    for (sd = xc.length; !xc.isElementIsValid(--sd);) {
+      xc.removeLast();
+    }
+  }
+
+  return x;
+}
+
+extension FromInt on int {
+  Big toBig() => Big(this);
   bool get intToBool => this == 0 ? false : true;
 }
 
-extension BigDouble on double {
-  Big get toBig => Big(this);
+extension FromDouble on double {
+  Big toBig() => Big(this);
 }
 
-extension BigString on String {
-  Big get toBig => Big(this);
+extension FromString on String {
+  Big toBig() => Big(this);
 }
